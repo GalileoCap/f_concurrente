@@ -7,7 +7,9 @@ class MapTest<T> extends Test {
   static <T> Map<T> newMap() {
     // TODO: Test all types at once
     //return new MapMonitor<T>();
-    return new MapFG<T>(); 
+    //return new MapFG<T>();
+    //return new MapO<T>();
+    return new MapLazy<T>();
   }
 
   public static void run() {
