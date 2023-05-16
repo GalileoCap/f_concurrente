@@ -1,17 +1,22 @@
-# Default uDO file
-
 UDOConfig = {
   'version': (1, 3, 0)
 }
 
+from pathlib import Path
+
+def filesWithExtension(d, extension):
+  return [ str(fpath) for fpath in list(Path(d).rglob(f'*{extension}')) ]
+
+SrcFiles = filesWithExtension('./src', '.java')
+
 def TaskCompile():
   return {
     'name': 'compile',
-    'deps': ['./src/main.java'],
+    'deps': SrcFiles,
     'outs': ['./build'],
 
     'actions': [
-      'javac -d build src/main.java',
+      f'javac -d build {" ".join(SrcFiles)}',
     ],
   }
 
