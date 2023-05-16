@@ -88,7 +88,7 @@ public class Twiner {
 
   public Boolean removePost(int date, int userId, int sessionId) {
     if (!checkUser(userId, sessionId))
-      return null;
+      return false;
 
     Post post = posts.find(date);
     if (post.ownerId != userId)
