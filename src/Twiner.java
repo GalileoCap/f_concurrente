@@ -96,4 +96,17 @@ public class Twiner {
 
     return posts.remove(date);
   }
+
+  public int nextPost(int userId, int sessionId) {
+    User user = findUser(userId, sessionId);
+    if (user == null)
+      return -1;
+
+    Post post = posts.findAfter(user.currentPost);
+    if (post == null)
+      return -1;
+
+    user.currentPost = post.date;
+    return user.currentPost;
+  }
 }
