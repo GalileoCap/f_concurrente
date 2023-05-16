@@ -20,6 +20,18 @@ def TaskCompile():
     ],
   }
 
+def TaskTest():
+  return {
+    'name': 'test',
+    'deps': [TaskCompile],
+
+    'capture': 1,
+    'actions': [
+      'java -cp build Test.RunTests',
+    ],
+  }
+
+
 def TaskRun():
   return {
     'name': 'run',
