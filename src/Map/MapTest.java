@@ -9,7 +9,8 @@ class MapTest<T> extends Test {
     //return new MapMonitor<T>();
     //return new MapFG<T>();
     //return new MapO<T>();
-    return new MapLazy<T>();
+    //return new MapLazy<T>();
+    return new MapFree<T>();
   }
 
   public static void run() {
