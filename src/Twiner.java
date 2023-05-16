@@ -1,6 +1,6 @@
 package Twiner;
 
-import Map.Map;
+import Map.*;
 
 class User {
   public int userId;
@@ -41,10 +41,10 @@ public class Twiner {
 
   public Twiner() {
     lastSessionId = 0;
-    loggedIn = new Map<User>();
+    loggedIn = new MapMonitor<User>();
 
     date = 0;
-    posts = new Map<Post>();
+    posts = new MapMonitor<Post>();
   }
   
   private User findUser(int userId, int sessionId) {

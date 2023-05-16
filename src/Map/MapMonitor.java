@@ -1,25 +1,25 @@
 package Map;
 
-class Node<T> {
-  public int key;
-  public T value;
-  public Node<T> next;
+public class MapMonitor<T> implements Map<T> {
+  class Node<T> {
+    public int key;
+    public T value;
+    public Node<T> next;
 
-  public Node(int _key, T _value) {
-    key = _key;
-    value = _value;
+    public Node(int _key, T _value) {
+      key = _key;
+      value = _value;
+    }
   }
-}
 
-public class Map<T> {
   private Node<T> head;
 
-  public Map() {
+  public MapMonitor() {
     head = new Node<T>(Integer.MIN_VALUE, null);
     head.next = new Node<T>(Integer.MAX_VALUE, null);
   }
 
-  public Boolean add(T newItem) {
+  public synchronized Boolean add(T newItem) {
     int key = newItem.hashCode();
     Node<T> prev = head,
             curr = prev.next;
@@ -38,7 +38,7 @@ public class Map<T> {
     }
   }
 
-  public Boolean remove(int key) {
+  public synchronized Boolean remove(int key) {
     Node<T> prev = head,
             curr = prev.next;
     while (curr.key < key) {
@@ -54,7 +54,7 @@ public class Map<T> {
     }
   }
 
-  public T findAfter(int key) {
+  public synchronized T findAfter(int key) {
     Node<T> prev = head,
             curr = prev.next;
     while (curr.key <= key) {
@@ -67,7 +67,7 @@ public class Map<T> {
     return curr.value;
   }
 
-  public T find(int key) {
+  public synchronized T find(int key) {
     Node<T> prev = head,
             curr = prev.next;
     while (curr.key < key) {

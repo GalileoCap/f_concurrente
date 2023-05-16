@@ -1,9 +1,13 @@
 package Test;
 
 import Test.Test;
-import Map.Map;
+import Map.*;
 
-class MapTest extends Test {
+class MapTest<T> extends Test {
+  static <T> Map<T> newMap() {
+    return new MapMonitor<T>(); // TODO: Test other types
+  }
+
   public static void run() {
     testFindNull();
     testAddAndFind();
@@ -15,7 +19,7 @@ class MapTest extends Test {
   static void testFindNull() {
     printCase("Map", "findNull");
 
-    Map<String> m = new Map<String>();
+    Map<String> m = newMap();
     String s = m.find(0);
 
     Assert(s == null);
@@ -26,7 +30,7 @@ class MapTest extends Test {
   static void testAddAndFind() {
     printCase("Map", "addAndFind");
 
-    Map<String> m = new Map<String>();
+    Map<String> m = newMap();
     String s = "Ahoy there!";
     int key = s.hashCode();
     
@@ -41,7 +45,7 @@ class MapTest extends Test {
   static void testAddAndFindMany() {
     printCase("Map", "addAndFindMany");
 
-    Map<String> m = new Map<String>();
+    Map<String> m = newMap();
     String s0 = "Ahoy there!";
     String s1 = "My friend!";
     int k0 = s0.hashCode();
@@ -59,7 +63,7 @@ class MapTest extends Test {
   static void testRemove() {
     printCase("Map", "addAndRemove");
 
-    Map<String> m = new Map<String>();
+    Map<String> m = newMap();
     String s = "Ahoy there!";
     int key = s.hashCode();
     
@@ -85,7 +89,7 @@ class MapTest extends Test {
       }
     }
 
-    Map<Item> m = new Map<Item>();
+    Map<Item> m = newMap();
     Item i0 = new Item(0);
     Item i1 = new Item(1);
     
