@@ -36,15 +36,18 @@ public class Twiner {
   private Map<User> loggedIn;
   private Map<Post> posts;
 
+  private MapBuilder mapBuilder;
   private int lastSessionId;
   private int date;
 
-  public Twiner() {
+  public Twiner(String mapType) {
+    mapBuilder = new MapBuilder(mapType);
+
     lastSessionId = 0;
-    loggedIn = new MapMonitor<User>();
+    loggedIn = mapBuilder.newMap();
 
     date = 0;
-    posts = new MapMonitor<Post>();
+    posts = mapBuilder.newMap();
   }
   
   private User findUser(int userId, int sessionId) {

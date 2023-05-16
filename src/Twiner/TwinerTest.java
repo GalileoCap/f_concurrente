@@ -4,6 +4,8 @@ import Test.Test;
 import Twiner.Twiner;
 
 class TwinerTest extends Test {
+  private static String mapType = "monitor";
+
   public static void run() {
     testLogIn();
     testLogOut();
@@ -20,7 +22,7 @@ class TwinerTest extends Test {
   static void testLogIn() {
     printCase("Twiner", "logIn");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
 
     int uid = 0;
     int sid = t.logIn(uid);
@@ -33,7 +35,7 @@ class TwinerTest extends Test {
   static void testLogOut() {
     printCase("Twiner", "logOut");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
 
     int uid = 0;
     int sid = t.logIn(uid);
@@ -47,7 +49,7 @@ class TwinerTest extends Test {
   static void testLogOutWrongSID() {
     printCase("Twiner", "logOutWrongSID");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
 
     int uid = 0;
     int sid = t.logIn(uid);
@@ -60,7 +62,7 @@ class TwinerTest extends Test {
   static void testNewPost() {
     printCase("Twiner", "newPost");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
@@ -72,7 +74,7 @@ class TwinerTest extends Test {
   static void testNewPostWrongSID() {
     printCase("Twiner", "newPostWrongSID");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
@@ -84,7 +86,7 @@ class TwinerTest extends Test {
   static void testNextPostNull() {
     printCase("Twiner", "nextPostNull");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
@@ -96,7 +98,7 @@ class TwinerTest extends Test {
   static void testNextPost() {
     printCase("Twiner", "nextPost");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
@@ -110,7 +112,7 @@ class TwinerTest extends Test {
   static void testNextPostWrongSID() {
     printCase("Twiner", "nextPostWrongSID");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
@@ -123,7 +125,7 @@ class TwinerTest extends Test {
   static void testRemovePost() {
     printCase("Twiner", "removePost");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
@@ -137,7 +139,7 @@ class TwinerTest extends Test {
   static void testRemovePostWrongSID() {
     printCase("Twiner", "removePostWrongSID");
 
-    Twiner t = new Twiner();
+    Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 

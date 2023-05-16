@@ -4,27 +4,22 @@ import Test.Test;
 import Map.*;
 
 class MapTest<T> extends Test {
-  static <T> Map<T> newMap() {
-    // TODO: Test all types at once
-    //return new MapMonitor<T>();
-    //return new MapFG<T>();
-    //return new MapO<T>();
-    //return new MapLazy<T>();
-    return new MapFree<T>();
-  }
-
   public static void run() {
-    testFindNull();
-    testAddAndFind();
-    testAddAndFindMany();
-    testRemove();
-    testFindAfter();
+    String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
+    for (String type : types) {
+      MapBuilder mb = new MapBuilder(type);
+      testFindNull(mb);
+      testAddAndFind(mb);
+      testAddAndFindMany(mb);
+      testRemove(mb);
+      testFindAfter(mb);
+    }
   }
 
-  static void testFindNull() {
-    printCase("Map", "findNull");
+  static void testFindNull(MapBuilder mb) {
+    printCase(String.format("Map(%s)", mb.type), "findNull");
 
-    Map<String> m = newMap();
+    Map<String> m = mb.newMap();
     String s = m.find(0);
 
     Assert(s == null);
@@ -32,10 +27,10 @@ class MapTest<T> extends Test {
     Success();
   }
 
-  static void testAddAndFind() {
-    printCase("Map", "addAndFind");
+  static void testAddAndFind(MapBuilder mb) {
+    printCase(String.format("Map(%s)", mb.type), "addAndFind");
 
-    Map<String> m = newMap();
+    Map<String> m = mb.newMap();
     String s = "Ahoy there!";
     int key = s.hashCode();
     
@@ -47,10 +42,10 @@ class MapTest<T> extends Test {
     Success();
   }
 
-  static void testAddAndFindMany() {
-    printCase("Map", "addAndFindMany");
+  static void testAddAndFindMany(MapBuilder mb) {
+    printCase(String.format("Map(%s)", mb.type), "addAndFindMany");
 
-    Map<String> m = newMap();
+    Map<String> m = mb.newMap();
     String s0 = "Ahoy there!";
     String s1 = "My friend!";
     int k0 = s0.hashCode();
@@ -65,10 +60,10 @@ class MapTest<T> extends Test {
     Success();
   }
 
-  static void testRemove() {
-    printCase("Map", "addAndRemove");
+  static void testRemove(MapBuilder mb) {
+    printCase(String.format("Map(%s)", mb.type), "addAndRemove");
 
-    Map<String> m = newMap();
+    Map<String> m = mb.newMap();
     String s = "Ahoy there!";
     int key = s.hashCode();
     
@@ -80,8 +75,8 @@ class MapTest<T> extends Test {
     Success();
   }
 
- static void testFindAfter() {
-    printCase("Map", "findAfter");
+ static void testFindAfter(MapBuilder mb) {
+    printCase(String.format("Map(%s)", mb.type), "findAfter");
 
     class Item {
       int hash;
@@ -94,7 +89,7 @@ class MapTest<T> extends Test {
       }
     }
 
-    Map<Item> m = newMap();
+    Map<Item> m = mb.newMap();
     Item i0 = new Item(0);
     Item i1 = new Item(1);
     
