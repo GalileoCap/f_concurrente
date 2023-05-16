@@ -8,6 +8,10 @@ def filesWithExtension(d, extension):
   return [ str(fpath) for fpath in list(Path(d).rglob(f'*{extension}')) ]
 
 SrcFiles = filesWithExtension('./src', '.java')
+JavacFlags = (
+ # '-Xlint:unchecked' +
+ ''
+)
 
 def TaskCompile():
   return {
@@ -16,7 +20,7 @@ def TaskCompile():
     'outs': ['./build'],
 
     'actions': [
-      f'javac -d build {" ".join(SrcFiles)}',
+      f'javac -d build {" ".join(SrcFiles)} {JavacFlags}',
     ],
   }
 

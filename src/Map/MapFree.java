@@ -25,28 +25,32 @@ public class MapFree<T> implements Map<T> {
 
   public MapFree() {
     head = new Node<T>(Integer.MIN_VALUE, null);
-    head.next = new AtomicMarkableReference(new Node<T>(Integer.MAX_VALUE, null), false);
+
+    Node<T> tail = new Node<T>(Integer.MAX_VALUE, null);
+
+    head.next = new AtomicMarkableReference<>(tail, false);
+    tail.next = new AtomicMarkableReference<>(null, false);
   }
 
   private NPair<T> findInternal(int key) { //TODO: Rename
     Node<T> prev, curr, next;
-    boolean[] marked = { false }; boolean snip;
+    boolean[] marked = { false };
     retry: while (true) {
       prev = head; curr = prev.next.getReference();
       while (true) {
         next = curr.next.get(marked);
         while (marked[0]) {
-          snip = prev.next.compareAndSet(curr, next, false, false);
-          if (!snip)
+          if (!prev.next.compareAndSet(curr, next, false, false))
             continue retry;
 
           curr = next;
           next = curr.next.get(marked);
         }
 
-        if (curr.key >= key)
+        if (key <= curr.key)
           return new NPair<T>(prev, curr);
         prev = curr;
+        curr = next;
       }
     }
   }
@@ -63,7 +67,7 @@ public class MapFree<T> implements Map<T> {
       if (curr.key == key)
         return false;
 
-      newNode.next = new AtomicMarkableReference(curr, false);
+      newNode.next = new AtomicMarkableReference<>(curr, false);
       if (prev.next.compareAndSet(curr, newNode, false, false))
         return true;
     }
