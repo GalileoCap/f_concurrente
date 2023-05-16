@@ -1,10 +1,12 @@
 package Test;
 
 import Test.MapTest;
+import Test.TwinerTest;
 
 class RunTests {
   public static void main(String args[]) {
     MapTest.run();
+    TwinerTest.run();
   }
 }
 
