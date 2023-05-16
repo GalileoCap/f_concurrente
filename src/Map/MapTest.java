@@ -5,7 +5,9 @@ import Map.*;
 
 class MapTest<T> extends Test {
   static <T> Map<T> newMap() {
-    return new MapMonitor<T>(); // TODO: Test other types
+    // TODO: Test all types at once
+    //return new MapMonitor<T>();
+    return new MapFG<T>(); 
   }
 
   public static void run() {
