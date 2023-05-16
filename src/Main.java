@@ -1,20 +1,15 @@
-import Map.Map;
+import Twiner.Twiner;
 
 class Main {
   public static void main(String args[]) {
-    Map<String> map = new Map<String>();
+    Twiner t = new Twiner();
 
-    String item0 = "Ahoy",
-           item1 = "my friend!",
-           item2 = "there!";
-
-    map.add(item0);
-    map.add(item1);
-    map.add(item2);
-
-    map.remove(item1.hashCode());
-    System.out.println(map.get(item0.hashCode()));
-    System.out.println(map.get(item1.hashCode()));
-    System.out.println(map.get(item2.hashCode()));
+    int sessionId = t.logIn(0);
+    System.out.println(sessionId);
+    System.out.println(t.logOut(1, sessionId));
+    System.out.println(t.logOut(0, 99));
+    System.out.println(t.logOut(0, sessionId));
+    System.out.println(t.logOut(0, sessionId));
   }
 }
+

@@ -54,7 +54,7 @@ public class Map<T> {
     }
   }
 
-  public T get(int key) {
+  public T find(int key) {
     Node<T> prev = head,
             curr = prev.next;
     while (curr.key < key) {
