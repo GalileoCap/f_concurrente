@@ -5,10 +5,12 @@ import Map.Map;
 class User {
   public int userId;
   public int sessionId;
+  public int currentPost;
 
   public User(int _userId, int _sessionId) {
     userId = _userId;
     sessionId = _sessionId;
+    currentPost = -1;
   }
 
   public int hashCode() {
@@ -45,9 +47,16 @@ public class Twiner {
     posts = new Map<Post>();
   }
   
-  private Boolean checkUser(int userId, int sessionId) {
+  private User findUser(int userId, int sessionId) {
     User user = loggedIn.find(userId);
-    return user != null && user.sessionId == sessionId;
+    if (user == null || user.sessionId != sessionId)
+      return null;
+    return user;
+  }
+
+  private Boolean checkUser(int userId, int sessionId) {
+    User user = findUser(userId, sessionId);
+    return user != null;
   }
 
   public int logIn(int userId) {
@@ -60,8 +69,7 @@ public class Twiner {
   }
 
   public Boolean logOut(int userId, int sessionId) {
-    User user = loggedIn.find(userId);
-    if (user == null || user.sessionId != sessionId)
+    if (!checkUser(userId, sessionId))
       return false;
 
     return loggedIn.remove(userId);
