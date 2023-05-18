@@ -43,7 +43,7 @@ def TaskRun():
 
     'capture': 1,
     'actions': [
-      'java -cp build Main',
+      'java -cp build Main 1 1 1 1 1',
     ],
   }
 
