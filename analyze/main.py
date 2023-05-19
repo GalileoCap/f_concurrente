@@ -45,15 +45,22 @@ def runCase(case, force = False):
   return data
 
 def runAllCases(ranges, force = False):
-  log('[runAllCases]', ranges, level = 'user')
+  log('[runAllCases]', level = 'user')
   for case in itt.product(*ranges):
     runCase(case, force)
 
 if __name__ == '__main__':
   os.makedirs('../data', exist_ok = True)
-
-  modes = ['monitor'] #['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
+  
+  modes = ['monitor', 'free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
   maxThreads = 1
-  rangeLogIn, rangeLogOut, rangeNewPost, rangeNextPost, rangeRemovePost = [range(1, maxThreads + 1)] * 5
-  rangeActions = range(1, 1 + 1)
-  runAllCases((modes, rangeLogIn, rangeLogOut, rangeNewPost, rangeNewPost, rangeRemovePost, rangeActions))
+  rangeLogIn, rangeLogOut, rangeNewPost, rangeNextPost, rangeRemovePost = (
+    utils.joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100)),
+    utils.joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100)),
+    utils.joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100)),
+    utils.joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100)),
+    utils.joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100))
+  )
+  rangeActions = utils.joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100))
+  runAllCases((modes, rangeLogIn, rangeLogOut, rangeNewPost, rangeNextPost, rangeRemovePost, rangeActions))
+
