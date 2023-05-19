@@ -6,7 +6,7 @@ logMask = [
   # 'deepUser',
   # 'debug',
   'error',
-  'deepDebug',
+  # 'deepDebug',
 ]
 
 def log(*args, level):
