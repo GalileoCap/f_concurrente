@@ -40,7 +40,7 @@ class UserThread extends Thread {
     long start = System.nanoTime();
     int sid = pool.twiner.logIn(uid);
     long delta = System.nanoTime() - start;
-    times.add(delta);
+    times.add(delta); // TODO: Also report whether it was a success (sid != -1)
 
     if (sid != -1) {
       pool.addUser(new User(uid, sid));
@@ -53,7 +53,7 @@ class UserThread extends Thread {
     long start = System.nanoTime();
     boolean success = pool.twiner.logOut(user.userId, user.sessionId);
     long delta = System.nanoTime() - start;
-    times.add(delta);
+    times.add(delta); // TODO: Also report whether it was a success
 
     if (success) {
       pool.removeUser(user);
@@ -66,7 +66,7 @@ class UserThread extends Thread {
     long start = System.nanoTime();
     int date = pool.twiner.newPost(user.userId, user.sessionId);
     long delta = System.nanoTime() - start;
-    times.add(delta);
+    times.add(delta); // TODO: Also report whether it was a success (date != -1)
 
     if (date != -1) {
       pool.setLastPost(date); // TODO: Save posts per-user
@@ -80,7 +80,7 @@ class UserThread extends Thread {
     long start = System.nanoTime();
     boolean success = pool.twiner.removePost(date, user.userId, user.sessionId);
     long delta = System.nanoTime() - start;
-    times.add(delta);
+    times.add(delta); // TODO: Also report whether it was a success
   }
 
   void nextPost() {
@@ -89,6 +89,6 @@ class UserThread extends Thread {
     long start = System.nanoTime();
     int date = pool.twiner.nextPost(user.userId, user.sessionId);
     long delta = System.nanoTime() - start;
-    times.add(delta);
+    times.add(delta); // TODO: Also report whether it was a success (date != -1)
   }
 }

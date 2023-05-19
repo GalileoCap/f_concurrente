@@ -5,15 +5,17 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ThreadPool {
-  public Twiner twiner;
-  public Semaphore startSem;
-  public int lastPost;
-  ArrayList<User> users;
+  public Twiner twiner; // U: Twiner that all threads share
+  public Semaphore startSem; // U: Semaphore to control that threads all start at the same time
+  public int lastPost; // U: Last successfully newPost // TODO: Keep track of user-post pairs
+  ArrayList<User> users; // U: Created users by logIn threads
   ArrayList<UserThread> threads;
 
   public static void main(String[] args) {
-    String mode = args[0];
-    int logIn = Utils.atoi(args[1]);
+    String mode = args[0]; // U: Mode for the maps Twiner uses, one of:
+                           // String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
+    // U: Number of threads doing each action
+    int logIn = Utils.atoi(args[1]); 
     int logOut = Utils.atoi(args[2]);
     int newPost = Utils.atoi(args[3]);
     int nextPost = Utils.atoi(args[4]);
@@ -40,6 +42,7 @@ public class ThreadPool {
 
     startSem.release(total);
 
+    // Wait until each thread is done and report its results
     for (UserThread thread : threads) {
       while(thread.isAlive());
       System.out.print(thread.mode + ", ");
