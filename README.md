@@ -25,5 +25,5 @@ Se necesita `python 3.11` con `Pipenv` (y si no se tiene la versión correcta de
 * Opción 1: Descargar y correr [udo](dev.galileocap.me/udo)
 * Opción 2: 
 ```bash
-cd ./analyze && pipenv run python main.py
+PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py
 ```

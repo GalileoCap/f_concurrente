@@ -1,8 +1,11 @@
+import os
+
 ############################################################
 # S: Config ################################################
 
-OUTDIR = 'out'
-DATADIR = 'data'
+OUTDIR = os.path.join(os.getcwd(), 'out')
+DATADIR = os.path.join(os.getcwd(), 'data')
+BUILDDIR = os.path.join(os.getcwd(), 'build')
 
 ############################################################
 # S: Log ###################################################

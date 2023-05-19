@@ -4,10 +4,10 @@ import subprocess
 import itertools as itt
 
 import utils
-from utils import log
+from utils import log, DATADIR, BUILDDIR
 
 def executeCase(mode, logIn, logOut, newPost, nextPost, removePost, actions):
-  cmd = f'java -cp ../build ThreadPool {mode} {logIn} {logOut} {newPost} {nextPost} {removePost} {actions}'
+  cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {logIn} {logOut} {newPost} {nextPost} {removePost} {actions}'
   res = subprocess.run(cmd, shell = True, stdout = subprocess.PIPE)
   res.check_returncode()
   return res.stdout
@@ -23,7 +23,7 @@ def processCaseOutput(stdout):
   return data
 
 def getCaseFpath(mode, logIn, logOut, newPost, nextPost, removePost, actions):
-  return f'../data/{mode}_{logIn}_{logOut}_{newPost}_{nextPost}_{removePost}_{actions}.json'
+  return os.path.join(DATADIR, f'{mode}_{logIn}_{logOut}_{newPost}_{nextPost}_{removePost}_{actions}.json')
 
 def runCase(case, force = False):
   fpath = getCaseFpath(*case)
@@ -46,5 +46,7 @@ def runCase(case, force = False):
 
 def runAllCases(ranges, force = False):
   log('[runAllCases]', level = 'user')
+
+  os.makedirs(DATADIR, exist_ok = True)
   for case in itt.product(*ranges):
     runCase(case, force)
