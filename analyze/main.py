@@ -9,6 +9,7 @@ if __name__ == '__main__':
   # ranges = utils.smallRanges()
   # ranges = utils.mediumRanges()
   # ranges = utils.fullRanges()
-  runAllCases(ranges)
 
-  log('DONE', level = 'user')
+  data = runAllCases(ranges)
+
+  print(list(data.items())[0]) # TODO: Analyze the data

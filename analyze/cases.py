@@ -48,5 +48,10 @@ def runAllCases(ranges, force = False):
   log('[runAllCases]', level = 'user')
 
   os.makedirs(DATADIR, exist_ok = True)
+
+  data = dict()
   for case in itt.product(*ranges):
-    runCase(case, force)
+    data[case] = runCase(case, force)
+
+  log('[runAllCases] DONE', level = 'user')
+  return data
