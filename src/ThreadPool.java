@@ -39,6 +39,12 @@ public class ThreadPool {
     spawnThreads(removePost, "removePost", actions);
 
     startSem.release(total);
+
+    for (UserThread thread : threads) {
+      while(thread.isAlive());
+      System.out.print(thread.mode + ", ");
+      System.out.println(thread.times);
+    }
   }
 
   void spawnThreads(int n, String mode, int actions) {
