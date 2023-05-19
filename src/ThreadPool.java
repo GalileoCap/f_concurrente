@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 public class ThreadPool {
   public Twiner twiner;
   public Semaphore startSem;
+  public int lastPost;
   ArrayList<User> users;
   ArrayList<UserThread> threads;
 
@@ -60,5 +61,9 @@ public class ThreadPool {
 
   public synchronized void removeUser(User user) {
     users.remove(user);
+  }
+
+  public synchronized void setLastPost(int lastPost) {
+    this.lastPost = Math.max(this.lastPost, lastPost);
   }
 }

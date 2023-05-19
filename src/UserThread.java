@@ -28,15 +28,17 @@ class UserThread extends Thread {
       case "logIn": logIn(); break;
       case "logOut": logOut(); break;
       case "newPost": newPost(); break;
+      case "removePost": removePost(); break;
       case "nextPost": nextPost(); break;
-      //case "removePost": removePost(); break;
     }
   }
 
   void logIn() {
-    int uid = (int)Math.floor(Math.random() * 10000);
+    int uid = (int)Math.floor(Math.random() * 1000000); // TODO: Max users param
     int sid = pool.twiner.logIn(uid);
-    pool.addUser(new User(uid, sid));
+    if (sid != -1) {
+      pool.addUser(new User(uid, sid));
+    }
   }
 
   void logOut() {
@@ -48,7 +50,17 @@ class UserThread extends Thread {
 
   void newPost() {
     User user = pool.getRandomUser();
-    pool.twiner.newPost(user.userId, user.sessionId); // TODO: Save posts
+    int date = pool.twiner.newPost(user.userId, user.sessionId);
+    if (date != -1) {
+      pool.setLastPost(date); // TODO: Save posts per-user
+    }
+  }
+
+  void removePost() {
+    User user = pool.getRandomUser(); // TODO: Get random user/owned post pair
+    int date = (int)Math.floor(Math.random() * pool.lastPost);
+
+    pool.twiner.removePost(date, user.userId, user.sessionId);
   }
 
   void nextPost() {
