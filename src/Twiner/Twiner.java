@@ -2,36 +2,6 @@ package Twiner;
 
 import Map.*;
 
-class User {
-  public int userId;
-  public int sessionId;
-  public int currentPost;
-
-  public User(int _userId, int _sessionId) {
-    userId = _userId;
-    sessionId = _sessionId;
-    currentPost = -1;
-  }
-
-  public int hashCode() {
-    return userId;
-  }
-}
-
-class Post {
-  public int ownerId;
-  public int date;
-
-  public Post(int _ownerId, int _date) {
-    ownerId = _ownerId;
-    date = _date;
-  }
-
-  public int hashCode() {
-    return date;
-  }
-}
-
 public class Twiner {
   private Map<User> loggedIn;
   private Map<Post> posts;
