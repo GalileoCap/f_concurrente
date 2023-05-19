@@ -34,6 +34,9 @@ public class ThreadPool {
 
     startSem.acquireUninterruptibly(total);
 
+    // Make sure there's an user for each thread
+    createUsers(total);
+
     spawnThreads(logIn, "logIn", actions);
     spawnThreads(logOut, "logOut", actions);
     spawnThreads(newPost, "newPost", actions);
@@ -46,7 +49,14 @@ public class ThreadPool {
     for (UserThread thread : threads) {
       while(thread.isAlive());
       System.out.print(thread.mode + ", ");
-      System.out.println(thread.times);
+      System.out.println(thread.times.toString().replace("[", "").replace("]", ""));
+    }
+  }
+
+  void createUsers(int n) {
+    for (int i = 0; i < n; ++i) {
+      int sid = twiner.logIn(i);
+      addUser(new User(i, sid));
     }
   }
 
@@ -58,7 +68,7 @@ public class ThreadPool {
 
   public synchronized User getRandomUser() {
     if (users.size() == 0) {
-      return new User(123, 123);
+      return new User(123, 123); // Invalid user
     }
     int idx = (int)Math.floor(Math.random() * users.size());
     return users.get(idx);

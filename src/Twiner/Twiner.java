@@ -64,7 +64,7 @@ public class Twiner {
       return false;
 
     Post post = posts.find(date);
-    if (post.ownerId != userId)
+    if (post == null || post.ownerId != userId)
       return false;
 
     return posts.remove(date);
