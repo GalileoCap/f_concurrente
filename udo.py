@@ -43,7 +43,7 @@ def TaskRun():
 
     'capture': 1,
     'actions': [
-      'PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py',
+      'PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py test',
     ],
   }
 
