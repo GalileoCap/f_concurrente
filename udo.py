@@ -1,3 +1,6 @@
+############################################################
+# S: Utils #################################################
+
 UDOConfig = {
   'version': (1, 3, 0)
 }
@@ -6,6 +9,12 @@ from pathlib import Path
 
 def filesWithExtension(d, extension):
   return [ str(fpath) for fpath in list(Path(d).rglob(f'*{extension}')) ]
+
+def rangesAction(ranges):
+  return f'PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py {ranges}'
+
+############################################################
+# S: Config ################################################
 
 SrcFiles = filesWithExtension('./src', '.java')
 JavacFlags = (
@@ -35,7 +44,6 @@ def TaskTest():
     ],
   }
 
-
 def TaskRun():
   return {
     'name': 'run',
@@ -43,7 +51,22 @@ def TaskRun():
 
     'capture': 1,
     'actions': [
-      'PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py test',
+      rangesAction('test')
+    ],
+  }
+
+def TaskFullExperiment():
+  return {
+    'name': 'full',
+    'deps': [TaskCompile, TaskTest],
+    'skipRun': True,
+
+    'capture': 1,
+    'actions': [
+      rangesAction('test'),
+      rangesAction('small'),
+      rangesAction('medium'),
+      rangesAction('full')
     ],
   }
 
