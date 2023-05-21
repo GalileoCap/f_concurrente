@@ -69,6 +69,6 @@ def fullRanges():
 Ranges = {
   'test': testRanges(),
   'small': smallRanges(),
-  'medium': mediumRanges(),
-  'full': fullRanges(),
+  # 'medium': mediumRanges(),
+  # 'full': fullRanges(),
 }

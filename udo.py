@@ -65,8 +65,8 @@ def TaskFullExperiment():
     'actions': [
       rangesAction('test'),
       rangesAction('small'),
-      rangesAction('medium'),
-      rangesAction('full')
+      # rangesAction('medium'),
+      # rangesAction('full')
     ],
   }
 
