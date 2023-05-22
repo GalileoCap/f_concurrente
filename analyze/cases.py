@@ -2,6 +2,7 @@ import os
 import json
 import subprocess
 import itertools as itt
+import pandas as pd
 
 import utils
 from utils import log, DATADIR, BUILDDIR
@@ -25,22 +26,26 @@ def processCaseOutput(stdout):
 def getCaseFpath(mode, logIn, logOut, newPost, nextPost, removePost, actions):
   return os.path.join(DATADIR, f'{mode}_{logIn}_{logOut}_{newPost}_{nextPost}_{removePost}_{actions}.json')
 
-def runCase(case, force = False):
-  fpath = getCaseFpath(*case)
+CACHE = {} # keys are 'mode|logIn|logOut|newPost|nextPost|removePost|actions' separated by '|'
 
+def get_cache_key(case):
+  return "|".join(case)
+
+def runCase(case, force = False):
   # If this case has already been executed and saved, load it
-  if not force and os.path.isfile(fpath):
-    log('[runCase] LOAD', case, level = 'deepDebug')
-    with open(fpath, 'r') as fin:
-      return json.load(fin)
+  key = get_cache_key(case)
+  if (not force) and (key in CACHE):
+      return CACHE[key]
 
   log('[runCase] RUN', case, level = 'deepDebug')
   stdout = executeCase(*case)
   data = processCaseOutput(stdout)
+  try:
+    data = pd.DataFrame(data)
+  except:
+    breakpoint()
 
-  # Save it
-  with open(fpath, 'w') as fout:
-    fout.write(json.dumps(data))
+  CACHE[key] = data
 
   return data
 
@@ -49,9 +54,11 @@ def runAllCases(ranges, force = False):
 
   os.makedirs(DATADIR, exist_ok = True)
 
-  data = dict()
+  data = pd.DataFrame()
   for case in itt.product(*ranges):
-    data[case] = runCase(case, force)
+    data = pd.concat([data, runCase(case, force)])
+
+  data.to_csv("data.csv", index=False)
 
   log('[runAllCases] DONE', level = 'user')
   return data
