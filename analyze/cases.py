@@ -40,6 +40,10 @@ def runCase(case):
   stdout = executeCase(*case)
   data = processCaseOutput(stdout)
   data['mode'] = case[0]
+  data['actions'] = case[1]
+  data['logIn'] = case[2]
+  data['logOut'] = case[3]
+  data['apiRequest'] = case[4]
 
   return data
 

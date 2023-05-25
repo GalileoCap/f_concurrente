@@ -48,7 +48,6 @@ public class ThreadPool {
       while(thread.isAlive());
       System.out.print(thread.mode + ", ");
       System.out.println(thread.times.toString().replace("[", "").replace("]", "")); 
-      // No deberiamos reportar tiempo total? o sea, no a nivel thread
     }
   }
 
