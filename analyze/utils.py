@@ -69,7 +69,7 @@ def smallRanges():
   modes = ['free', 'optimistic', 'fine-grained']
   rangeActions = range(1, 10+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 10+1)] * 3
-  repeat = range(10)
+  repeat = range(5)
   return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat)
 
 def mediumRanges():
