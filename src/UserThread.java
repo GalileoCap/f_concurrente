@@ -28,9 +28,7 @@ class UserThread extends Thread {
     switch (mode) {
       case "logIn": logIn(); break;
       case "logOut": logOut(); break;
-      case "newPost": newPost(); break;
-      case "removePost": removePost(); break;
-      case "nextPost": nextPost(); break;
+      case "apiRequest": apiRequest(); break;
     }
   }
 
@@ -60,35 +58,12 @@ class UserThread extends Thread {
     }
   }
 
-  void newPost() {
+  void apiRequest() {
     User user = pool.getRandomUser();
 
     long start = System.nanoTime();
-    int date = pool.twiner.newPost(user.userId, user.sessionId);
-    long delta = System.nanoTime() - start;
-    times.add(delta); // TODO: Also report whether it was a success (date != -1)
-
-    if (date != -1) {
-      pool.setLastPost(date); // TODO: Save posts per-user
-    }
-  }
-
-  void removePost() {
-    User user = pool.getRandomUser(); // TODO: Get random user/owned post pair
-    int date = (int)Math.floor(Math.random() * pool.lastPost);
-
-    long start = System.nanoTime();
-    boolean success = pool.twiner.removePost(date, user.userId, user.sessionId);
+    Boolean success = pool.twiner.apiRequest(user.userId, user.sessionId);
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
-  }
-
-  void nextPost() {
-    User user = pool.getRandomUser();
-
-    long start = System.nanoTime();
-    int date = pool.twiner.nextPost(user.userId, user.sessionId);
-    long delta = System.nanoTime() - start;
-    times.add(delta); // TODO: Also report whether it was a success (date != -1)
   }
 }

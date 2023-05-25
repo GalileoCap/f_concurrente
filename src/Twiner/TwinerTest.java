@@ -10,13 +10,9 @@ class TwinerTest extends Test {
     testLogIn();
     testLogOut();
     testLogOutWrongSID();
-    testNewPost();
-    testNewPostWrongSID();
-    testNextPostNull();
-    testNextPost();
-    testNextPostWrongSID();
-    testRemovePost();
-    testRemovePostWrongSID();
+    testApiRequest();
+    testApiRequestWrongUser();
+    testApiRequestWrongSID();
   }
 
   static void testLogIn() {
@@ -59,93 +55,36 @@ class TwinerTest extends Test {
     Success();
   }
 
-  static void testNewPost() {
-    printCase("Twiner", "newPost");
+  static void testApiRequest() {
+    printCase("Twiner", "apiRequest");
 
     Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
-    Assert(t.newPost(uid, sid) != -1, "Couldn't post");
+    Assert(t.apiRequest(uid, sid), "Couldn't send api request");
 
     Success();
   }
 
-  static void testNewPostWrongSID() {
-    printCase("Twiner", "newPostWrongSID");
+  static void testApiRequestWrongUser() {
+    printCase("Twiner", "apiRequestWrongUser");
 
     Twiner t = new Twiner(mapType);
-    int uid = 0;
-    int sid = t.logIn(uid);
 
-    Assert(t.newPost(uid, sid+1) == -1, "Was able to post");
+    Assert(!t.apiRequest(0, 0), "Was able to send api request");
 
     Success();
   }
 
-  static void testNextPostNull() {
-    printCase("Twiner", "nextPostNull");
+  static void testApiRequestWrongSID() {
+    printCase("Twiner", "apiRequestWrongSID");
 
     Twiner t = new Twiner(mapType);
     int uid = 0;
     int sid = t.logIn(uid);
 
-    Assert(t.nextPost(uid, sid) == -1, "Found a post");
-
-    Success();
-  }
-
-  static void testNextPost() {
-    printCase("Twiner", "nextPost");
-
-    Twiner t = new Twiner(mapType);
-    int uid = 0;
-    int sid = t.logIn(uid);
-
-    int date = t.newPost(uid, sid);
-    Assert(t.nextPost(uid, sid) == date, "Couldn't find post");
-    Assert(t.nextPost(uid, sid) == -1, "Found another post");
-
-    Success();
-  }
-
-  static void testNextPostWrongSID() {
-    printCase("Twiner", "nextPostWrongSID");
-
-    Twiner t = new Twiner(mapType);
-    int uid = 0;
-    int sid = t.logIn(uid);
-
-    int date = t.newPost(uid, sid);
-    Assert(t.nextPost(uid, sid+1) == -1, "Was able to move");
-
-    Success();
-  }
-
-  static void testRemovePost() {
-    printCase("Twiner", "removePost");
-
-    Twiner t = new Twiner(mapType);
-    int uid = 0;
-    int sid = t.logIn(uid);
-
-    int date = t.newPost(uid, sid);
-    Assert(t.removePost(date, uid, sid), "Couldn't remove post");
-    Assert(t.nextPost(uid, sid) == -1, "Found another post");
-
-    Success();
-  }
-
-  static void testRemovePostWrongSID() {
-    printCase("Twiner", "removePostWrongSID");
-
-    Twiner t = new Twiner(mapType);
-    int uid = 0;
-    int sid = t.logIn(uid);
-
-    int date = t.newPost(uid, sid);
-    Assert(!t.removePost(date, uid, sid+1), "Was able to remove post");
-    Assert(t.nextPost(uid, sid) == date, "Couldn't find post");
+    Assert(!t.apiRequest(uid, sid+1), "Was able to send api request");
 
     Success();
   }

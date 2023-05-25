@@ -16,8 +16,8 @@ def calcDfAndSave(df, data, fpath):
   utils.saveDf(df, fpath)
   return df
 
-def executeCase(mode, actions, logIn, logOut, newPost, nextPost, removePost):
-  cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {actions} {logIn} {logOut} {newPost} {nextPost} {removePost}'
+def executeCase(mode, actions, logIn, logOut, apiRequest):
+  cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {actions} {logIn} {logOut} {apiRequest}'
   res = subprocess.run(cmd, shell = True, stdout = subprocess.PIPE)
   res.check_returncode()
   return res.stdout

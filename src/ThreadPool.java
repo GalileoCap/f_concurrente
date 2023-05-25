@@ -7,7 +7,6 @@ import java.util.concurrent.Semaphore;
 public class ThreadPool {
   public Twiner twiner; // U: Twiner that all threads share
   public Semaphore startSem; // U: Semaphore to control that threads all start at the same time
-  public int lastPost; // U: Last successfully newPost // TODO: Keep track of user-post pairs
   ArrayList<User> users; // U: Created users by logIn threads
   ArrayList<UserThread> threads;
 
@@ -15,20 +14,18 @@ public class ThreadPool {
     String mode = args[0]; // U: Mode for the maps Twiner uses, one of:
                            // String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
 
-    // U: Number of actions per thread
-    int actions = Utils.atoi(args[1]);
+    int actions = Utils.atoi(args[1]); // U: Number of actions per thread
 
     // U: Number of threads doing each action
     int logIn = Utils.atoi(args[2]); 
     int logOut = Utils.atoi(args[3]);
-    int newPost = Utils.atoi(args[4]);
-    int nextPost = Utils.atoi(args[5]);
-    int removePost = Utils.atoi(args[6]);
-    new ThreadPool(mode, actions, logIn, logOut, newPost, nextPost, removePost);
+    int apiRequest = Utils.atoi(args[4]);
+
+    new ThreadPool(mode, actions, logIn, logOut, apiRequest);
   }
 
-  public ThreadPool(String mode, int actions, int logIn, int logOut, int newPost, int nextPost, int removePost) {
-    int total = logIn + logOut + newPost + nextPost + removePost;
+  public ThreadPool(String mode, int actions, int logIn, int logOut, int apiRequest) {
+    int total = logIn + logOut + apiRequest;
 
     twiner = new Twiner(mode);
     startSem = new Semaphore(total);
@@ -42,9 +39,7 @@ public class ThreadPool {
 
     spawnThreads(logIn, "logIn", actions);
     spawnThreads(logOut, "logOut", actions);
-    spawnThreads(newPost, "newPost", actions);
-    spawnThreads(nextPost, "nextPost", actions);
-    spawnThreads(removePost, "removePost", actions);
+    spawnThreads(apiRequest, "apiRequest", actions);
 
     startSem.release(total);
 
@@ -84,9 +79,5 @@ public class ThreadPool {
 
   public synchronized void removeUser(User user) {
     users.remove(user);
-  }
-
-  public synchronized void setLastPost(int lastPost) {
-    this.lastPost = Math.max(this.lastPost, lastPost);
   }
 }
