@@ -17,9 +17,12 @@ def calcDfAndSave(df, data, fpath):
   return df
 
 def filterCases(ranges, df):
-  log('[filterCases] Found', len(df), level = 'debug')
-  cached = list(df[['mode', 'actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads', 'repeat']].itertuples(index = False, name = None)) if len(df) > 0 else []
-  return [case for case in itt.product(*ranges) if case not in cached]
+  cached = set(df[['mode', 'actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads', 'repeat']].itertuples(index = False, name = None)) if len(df) > 0 else set()
+  for case in itt.product(*ranges):
+    if case not in cached:
+      yield case
+    else:
+      cached.remove(case)
 
 def executeCase(mode, actions, logIn, logOut, apiRequest, _):
   cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {actions} {logIn} {logOut} {apiRequest}'
@@ -54,18 +57,15 @@ def runCase(case):
   return data
 
 def runAllCases(name, ranges):
+  ranges, total = ranges
   log('[runAllCases]', name, level = 'user')
 
   fpath = os.path.join(DATADIR, name + '.pkl.bz2')
-  df = utils.readDf(fpath)
-
-  cases = filterCases(ranges, df) # Don't re-run cached cases
-  if len(cases) == 0:
-    return df
+  df = utils.readDf(fpath) # Try to read cached cases
 
   data = []
   tstamp = time()
-  for case in tqdm(cases):
+  for case in tqdm(filterCases(ranges, df), initial = len(df), total = total): #NOTE: Skips cached cases
     data.append(runCase(case))
 
     # Save frequently to avoid losing data
