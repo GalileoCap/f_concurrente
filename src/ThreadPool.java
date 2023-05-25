@@ -14,17 +14,20 @@ public class ThreadPool {
   public static void main(String[] args) {
     String mode = args[0]; // U: Mode for the maps Twiner uses, one of:
                            // String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
+
+    // U: Number of actions per thread
+    int actions = Utils.atoi(args[1]);
+
     // U: Number of threads doing each action
-    int logIn = Utils.atoi(args[1]); 
-    int logOut = Utils.atoi(args[2]);
-    int newPost = Utils.atoi(args[3]);
-    int nextPost = Utils.atoi(args[4]);
-    int removePost = Utils.atoi(args[5]);
-    int actions = Utils.atoi(args[6]);
-    new ThreadPool(mode, logIn, logOut, newPost, nextPost, removePost, actions);
+    int logIn = Utils.atoi(args[2]); 
+    int logOut = Utils.atoi(args[3]);
+    int newPost = Utils.atoi(args[4]);
+    int nextPost = Utils.atoi(args[5]);
+    int removePost = Utils.atoi(args[6]);
+    new ThreadPool(mode, actions, logIn, logOut, newPost, nextPost, removePost);
   }
 
-  public ThreadPool(String mode, int logIn, int logOut, int newPost, int nextPost, int removePost, int actions) {
+  public ThreadPool(String mode, int actions, int logIn, int logOut, int newPost, int nextPost, int removePost) {
     int total = logIn + logOut + newPost + nextPost + removePost;
 
     twiner = new Twiner(mode);
