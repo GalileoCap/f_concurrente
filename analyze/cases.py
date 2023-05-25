@@ -3,11 +3,18 @@ import json
 import subprocess
 import itertools as itt
 import pandas as pd
+from time import time
 
 import utils
-from utils import log, DATADIR, BUILDDIR
+from utils import log, DATADIR, BUILDDIR, SAVEDT
 from statistics import median
 from tqdm import tqdm
+
+def calcDfAndSave(df, data, fpath):
+  df = pd.concat([df, pd.DataFrame(data)])
+  os.makedirs(DATADIR, exist_ok = True)
+  utils.saveDf(df, fpath)
+  return df
 
 def executeCase(mode, logIn, logOut, newPost, nextPost, removePost, actions):
   cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {logIn} {logOut} {newPost} {nextPost} {removePost} {actions}'
@@ -39,18 +46,28 @@ def runCase(case):
 def runAllCases(name, ranges):
   log('[runAllCases]', name, level = 'user')
 
+  df = pd.DataFrame()
+
   fpath = os.path.join(DATADIR, name + '.pkl.bz2')
   if os.path.isfile(fpath):
     log('[runAllCases] LOAD', name, level = 'debug')
-    return utils.readDf(fpath)
+    df = utils.readDf(fpath)
+
+  cases = list(itt.product(*ranges))[len(df):] # Don't re-run cached cases
+
+  if len(cases) == 0:
+    return df
 
   data = []
-  for case in tqdm(list(itt.product(*ranges))):
+  tstamp = time()
+  for case in tqdm(cases):
     data.append(runCase(case))
-  df = pd.DataFrame(data)
 
-  os.makedirs(DATADIR, exist_ok = True)
-  utils.saveDf(df, fpath)
+    # Save frequently to avoid losing data
+    if (time() - tstamp) > SAVEDT:
+      df = calcDfAndSave(df, data, fpath)
+      data.clear() 
+      tstamp = time()
 
   log('[runAllCases] DONE', name, level = 'user')
-  return df
+  return calcDfAndSave(df, data, fpath)

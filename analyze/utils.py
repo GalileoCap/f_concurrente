@@ -8,6 +8,8 @@ OUTDIR = os.path.join(os.getcwd(), 'out')
 DATADIR = os.path.join(os.getcwd(), 'data')
 BUILDDIR = os.path.join(os.getcwd(), 'build')
 
+SAVEDT = 5 * 60 # In seconds
+
 ############################################################
 # S: Log ###################################################
 
