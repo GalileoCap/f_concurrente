@@ -14,7 +14,8 @@ def rangesAction(ranges):
   return f'PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py {ranges}'
 
 def copyPrevAction(prev, curr):
-  return f'cp ./data/{prev}.pkl.bz2 ./data/{curr}.pkl.bz2'
+  opath = f'./data/{curr}.pkl.bz2'
+  return f'[ ! -f {opath} ] && cp ./data/{prev}.pkl.bz2 {opath} || :'
 
 ############################################################
 # S: Config ################################################
