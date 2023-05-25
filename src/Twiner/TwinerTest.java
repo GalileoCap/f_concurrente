@@ -9,10 +9,8 @@ class TwinerTest extends Test {
   public static void run() {
     testLogIn();
     testLogOut();
-    testLogOutWrongSID();
     testApiRequest();
     testApiRequestWrongUser();
-    testApiRequestWrongSID();
   }
 
   static void testLogIn() {
@@ -21,9 +19,8 @@ class TwinerTest extends Test {
     Twiner t = new Twiner(mapType);
 
     int uid = 0;
-    int sid = t.logIn(uid);
-
-    Assert(t.logIn(uid) == -1, "Logged in twice");
+    Assert(t.logIn(uid), "Couldn't log in");
+    Assert(!t.logIn(uid), "Logged in twice");
 
     Success();
   }
@@ -34,23 +31,10 @@ class TwinerTest extends Test {
     Twiner t = new Twiner(mapType);
 
     int uid = 0;
-    int sid = t.logIn(uid);
+    t.logIn(uid);
 
-    Assert(t.logOut(uid, sid), "Coulnd't log out");
-    Assert(t.logIn(uid) != -1, "Couldn't log back in");
-
-    Success();
-  }
-
-  static void testLogOutWrongSID() {
-    printCase("Twiner", "logOutWrongSID");
-
-    Twiner t = new Twiner(mapType);
-
-    int uid = 0;
-    int sid = t.logIn(uid);
-
-    Assert(!t.logOut(uid, sid+1), "Was able to log out");
+    Assert(t.logOut(uid), "Coulnd't log out");
+    Assert(t.logIn(uid), "Couldn't log back in");
 
     Success();
   }
@@ -60,9 +44,9 @@ class TwinerTest extends Test {
 
     Twiner t = new Twiner(mapType);
     int uid = 0;
-    int sid = t.logIn(uid);
+    t.logIn(uid);
 
-    Assert(t.apiRequest(uid, sid), "Couldn't send api request");
+    Assert(t.apiRequest(uid), "Couldn't send api request");
 
     Success();
   }
@@ -72,19 +56,7 @@ class TwinerTest extends Test {
 
     Twiner t = new Twiner(mapType);
 
-    Assert(!t.apiRequest(0, 0), "Was able to send api request");
-
-    Success();
-  }
-
-  static void testApiRequestWrongSID() {
-    printCase("Twiner", "apiRequestWrongSID");
-
-    Twiner t = new Twiner(mapType);
-    int uid = 0;
-    int sid = t.logIn(uid);
-
-    Assert(!t.apiRequest(uid, sid+1), "Was able to send api request");
+    Assert(!t.apiRequest(0), "Was able to send api request");
 
     Success();
   }

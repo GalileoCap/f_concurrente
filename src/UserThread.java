@@ -1,4 +1,3 @@
-import Twiner.User;
 import Utils.*;
 import java.util.ArrayList;
 
@@ -36,20 +35,20 @@ class UserThread extends Thread {
     int uid = (int)Math.floor(Math.random() * Integer.MAX_VALUE);
 
     long start = System.nanoTime();
-    int sid = pool.twiner.logIn(uid);
+    Boolean success = pool.twiner.logIn(uid);
     long delta = System.nanoTime() - start;
-    times.add(delta); // TODO: Also report whether it was a success (sid != -1)
+    times.add(delta); // TODO: Also report whether it was a success
 
-    if (sid != -1) {
-      pool.addUser(new User(uid, sid));
+    if (success) {
+      pool.addUser(uid);
     }
   }
 
   void logOut() {
-    User user = pool.getRandomUser();
+    Integer user = pool.getRandomUser();
 
     long start = System.nanoTime();
-    boolean success = pool.twiner.logOut(user.userId, user.sessionId);
+    boolean success = pool.twiner.logOut(user);
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
 
@@ -59,10 +58,10 @@ class UserThread extends Thread {
   }
 
   void apiRequest() {
-    User user = pool.getRandomUser();
+    Integer user = pool.getRandomUser();
 
     long start = System.nanoTime();
-    Boolean success = pool.twiner.apiRequest(user.userId, user.sessionId);
+    Boolean success = pool.twiner.apiRequest(user);
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
   }

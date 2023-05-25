@@ -1,5 +1,4 @@
 import Twiner.Twiner;
-import Twiner.User;
 import Utils.Utils;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -7,7 +6,7 @@ import java.util.concurrent.Semaphore;
 public class ThreadPool {
   public Twiner twiner; // U: Twiner that all threads share
   public Semaphore startSem; // U: Semaphore to control that threads all start at the same time
-  ArrayList<User> users; // U: Created users by logIn threads
+  ArrayList<Integer> users; // U: Created users by logIn threads
   ArrayList<UserThread> threads;
 
   public static void main(String[] args) {
@@ -54,8 +53,8 @@ public class ThreadPool {
 
   void createUsers(int n) {
     for (int i = 0; i < n; ++i) {
-      int sid = twiner.logIn(i);
-      addUser(new User(i, sid));
+      twiner.logIn(i);
+      addUser(i);
     }
   }
 
@@ -65,19 +64,19 @@ public class ThreadPool {
     }
   }
 
-  public synchronized User getRandomUser() {
+  public synchronized Integer getRandomUser() {
     if (users.size() == 0) {
-      return new User(123, 123); // Invalid user
+      return 0;
     }
     int idx = (int)Math.floor(Math.random() * users.size());
     return users.get(idx);
   }
 
-  public synchronized void addUser(User user) {
+  public synchronized void addUser(Integer user) {
     users.add(user);
   }
 
-  public synchronized void removeUser(User user) {
+  public synchronized void removeUser(Integer user) {
     users.remove(user);
   }
 }
