@@ -31,9 +31,15 @@ def log(*args, level):
 DFCOMPRESS = 'bz2'
 
 def readDf(fpath):
-  return pd.read_pickle(fpath, compression = DFCOMPRESS)
+  if os.path.isfile(fpath):
+    log('[readDf] LOAD', fpath, level = 'debug')
+    return pd.read_pickle(fpath, compression = DFCOMPRESS)
+  else:
+    log('[readDf] NOT FOUND', fpath, level = 'debug')
+    return pd.DataFrame()
 
 def saveDf(df, fpath):
+  log('[saveDf]', fpath, level = 'deepDebug')
   return df.to_pickle(fpath, compression = DFCOMPRESS)
 
 def dfPkl2Csv(ipath, opath):
