@@ -39,10 +39,10 @@ def runCase(case):
 def runAllCases(name, ranges):
   log('[runAllCases]', name, level = 'user')
 
-  fpath = os.path.join(DATADIR, name + '.csv')
+  fpath = os.path.join(DATADIR, name + '.pkl.bz2')
   if os.path.isfile(fpath):
     log('[runAllCases] LOAD', name, level = 'debug')
-    return pd.read_csv(fpath)
+    return utils.readDf(fpath)
 
   data = []
   for case in tqdm(list(itt.product(*ranges))):
@@ -50,7 +50,7 @@ def runAllCases(name, ranges):
   df = pd.DataFrame(data)
 
   os.makedirs(DATADIR, exist_ok = True)
-  df.to_csv(fpath, index = False)
+  utils.saveDf(df, fpath)
 
   log('[runAllCases] DONE', name, level = 'user')
   return df

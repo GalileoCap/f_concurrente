@@ -27,3 +27,9 @@ Se necesita `python 3.11` con `Pipenv` (y si no se tiene la versión correcta de
 ```bash
 PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py
 ```
+
+### Extra
+Se puede ejecutar el archivo `analyze/convert_csv.py` para convertir los pickle guardados en csv.
+```bash
+PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/convert_csv.py
+```

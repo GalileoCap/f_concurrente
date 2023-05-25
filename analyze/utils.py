@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 ############################################################
 # S: Config ################################################
@@ -21,6 +22,25 @@ logMask = [
 def log(*args, level):
   if level in logMask:
     print(*args)
+
+############################################################
+# S: Df Management #########################################
+
+DFCOMPRESS = 'bz2'
+
+def readDf(fpath):
+  return pd.read_pickle(fpath, compression = DFCOMPRESS)
+
+def saveDf(df, fpath):
+  return df.to_pickle(fpath, compression = DFCOMPRESS)
+
+def dfPkl2Csv(ipath, opath):
+  df = readDf(ipath)
+  df.to_csv(opath, index = False)
+
+def dfCsv2Pkl(ipath, opath):
+  df = pd.read_csv(ipath)
+  saveDf(df, opath)
 
 ############################################################
 # S: Ranges ################################################
