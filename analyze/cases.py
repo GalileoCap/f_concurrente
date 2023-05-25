@@ -16,6 +16,11 @@ def calcDfAndSave(df, data, fpath):
   utils.saveDf(df, fpath)
   return df
 
+def filterCases(ranges, df):
+  log('[filterCases] Found', len(df), level = 'debug')
+  cached = list(df[['mode', 'actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads', 'repeat']].itertuples(index = False, name = None)) if len(df) > 0 else []
+  return [case for case in itt.product(*ranges) if case not in cached]
+
 def executeCase(mode, actions, logIn, logOut, apiRequest, _):
   cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {actions} {logIn} {logOut} {apiRequest}'
   res = subprocess.run(cmd, shell = True, stdout = subprocess.PIPE)
@@ -44,6 +49,7 @@ def runCase(case):
   data['logIn_threads'] = case[2]
   data['logOut_threads'] = case[3]
   data['apiRequest_threads'] = case[4]
+  data['repeat'] = case[5]
 
   return data
 
@@ -53,7 +59,7 @@ def runAllCases(name, ranges):
   fpath = os.path.join(DATADIR, name + '.pkl.bz2')
   df = utils.readDf(fpath)
 
-  cases = list(itt.product(*ranges))[len(df):] # Don't re-run cached cases
+  cases = filterCases(ranges, df) # Don't re-run cached cases
   if len(cases) == 0:
     return df
 
