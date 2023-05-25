@@ -13,6 +13,9 @@ def filesWithExtension(d, extension):
 def rangesAction(ranges):
   return f'PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py {ranges}'
 
+def copyPrevAction(prev, curr):
+  return f'cp ./data/{prev}.pkl.bz2 ./data/{curr}.pkl.bz2'
+
 ############################################################
 # S: Config ################################################
 
@@ -64,9 +67,10 @@ def TaskFullExperiment():
     'capture': 1,
     'actions': [
       rangesAction('test'),
-      rangesAction('small'),
-      # rangesAction('medium'),
-      # rangesAction('full')
+      copyPrevAction('test', 'small'), rangesAction('small'),
+      copyPrevAction('small', 'medium'), rangesAction('medium'),
+      copyPrevAction('medium', 'large'), rangesAction('large'),
+      copyPrevAction('large', 'full'), rangesAction('full'),
     ],
   }
 
