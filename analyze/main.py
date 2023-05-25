@@ -10,8 +10,6 @@ if __name__ == '__main__':
     sys.exit(0)
 
   ranges = sys.argv[1]
-  log('Running:', ranges, level = 'user')
+  df = runAllCases(ranges, utils.Ranges[ranges])
 
-  data = runAllCases(utils.Ranges[ranges])
-
-  print(list(data.items())[0]) # TODO: Analyze the data
+  print(df.head(2), len(df), sep = '\n') # TODO: Analyze the data

@@ -57,14 +57,14 @@ def mediumRanges():
   rangeActions = joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000+1, 100))
   return (modes, rangeLogIn, rangeLogOut, rangeNewPost, rangeNextPost, rangeRemovePost, rangeActions)
 
-def fullRanges():
+def fullRanges(): # TODO: Not full anymore, change to large
   modes = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
   rangeLogIn, rangeLogOut, rangeNewPost, rangeNextPost, rangeRemovePost = (
-    joinRanges(range(1, 100), range(100, 1000+1, 100)),
-    joinRanges(range(1, 100), range(100, 1000+1, 100)),
-    joinRanges(range(1, 100), range(100, 1000+1, 100)),
-    joinRanges(range(1, 100), range(100, 1000+1, 100)),
-    joinRanges(range(1, 100), range(100, 1000+1, 100))
+    joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
+    joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
+    joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
+    joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
+    joinRanges(range(1, 100, 5), range(100, 1000+1, 100))
   )
   rangeActions = joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100), range(1000, 10000+1, 1000))
   return (modes, rangeLogIn, rangeLogOut, rangeNewPost, rangeNextPost, rangeRemovePost, rangeActions)

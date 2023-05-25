@@ -3,7 +3,7 @@
 ## Integrantes
 
 * F. Galileo Cappella Lewi, 653/20
-* Leo Mansini
+* Leo Mansini, 318/19
 
 ## Ejecución del programa
 Se necesita `java`

@@ -2,9 +2,12 @@ import os
 import json
 import subprocess
 import itertools as itt
+import pandas as pd
 
 import utils
 from utils import log, DATADIR, BUILDDIR
+from statistics import median
+from tqdm import tqdm
 
 def executeCase(mode, logIn, logOut, newPost, nextPost, removePost, actions):
   cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {logIn} {logOut} {newPost} {nextPost} {removePost} {actions}'
@@ -20,38 +23,34 @@ def processCaseOutput(stdout):
     mode = out[0]
     times = [int(t) for t in out[1:]]
     data[mode] = data.get(mode, []) + times
+  for mode, times in data.items():
+    data[mode] = median(times)
   return data
 
-def getCaseFpath(mode, logIn, logOut, newPost, nextPost, removePost, actions):
-  return os.path.join(DATADIR, f'{mode}_{logIn}_{logOut}_{newPost}_{nextPost}_{removePost}_{actions}.json')
-
-def runCase(case, force = False):
-  fpath = getCaseFpath(*case)
-
-  # If this case has already been executed and saved, load it
-  if not force and os.path.isfile(fpath):
-    log('[runCase] LOAD', case, level = 'deepDebug')
-    with open(fpath, 'r') as fin:
-      return json.load(fin)
-
+def runCase(case):
   log('[runCase] RUN', case, level = 'deepDebug')
+
   stdout = executeCase(*case)
   data = processCaseOutput(stdout)
-
-  # Save it
-  with open(fpath, 'w') as fout:
-    fout.write(json.dumps(data))
+  data['mode'] = case[0]
 
   return data
 
-def runAllCases(ranges, force = False):
-  log('[runAllCases]', level = 'user')
+def runAllCases(name, ranges):
+  log('[runAllCases]', name, level = 'user')
+
+  fpath = os.path.join(DATADIR, name + '.csv')
+  if os.path.isfile(fpath):
+    log('[runAllCases] LOAD', name, level = 'debug')
+    return pd.read_csv(fpath)
+
+  data = []
+  for case in tqdm(list(itt.product(*ranges))):
+    data.append(runCase(case))
+  df = pd.DataFrame(data)
 
   os.makedirs(DATADIR, exist_ok = True)
+  df.to_csv(fpath, index = False)
 
-  data = dict()
-  for case in itt.product(*ranges):
-    data[case] = runCase(case, force)
-
-  log('[runAllCases] DONE', level = 'user')
-  return data
+  log('[runAllCases] DONE', name, level = 'user')
+  return df
