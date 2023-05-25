@@ -62,13 +62,15 @@ def testRanges():
   modes = ['free', 'monitor']
   rangeActions = range(1, 5+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 3+1)] * 3
-  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest)
+  repeat = range(3)
+  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat)
 
 def smallRanges():
   modes = ['free', 'optimistic', 'fine-grained']
   rangeActions = range(1, 10+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 10+1)] * 3
-  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest)
+  repeat = range(10)
+  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat)
 
 def mediumRanges():
   modes = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
@@ -78,7 +80,8 @@ def mediumRanges():
     joinRanges(range(1, 10), range(10, 100+1, 10)),
     joinRanges(range(1, 10), range(10, 100+1, 10))
   )
-  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest)
+  repeat = range(10)
+  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat)
 
 def fullRanges(): # TODO: Not full anymore, change to large
   modes = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
@@ -88,7 +91,8 @@ def fullRanges(): # TODO: Not full anymore, change to large
     joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
     joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
   )
-  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest)
+  repeat = range(10)
+  return (modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat)
 
 Ranges = {
   'test': testRanges(),

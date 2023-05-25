@@ -16,7 +16,7 @@ def calcDfAndSave(df, data, fpath):
   utils.saveDf(df, fpath)
   return df
 
-def executeCase(mode, actions, logIn, logOut, apiRequest):
+def executeCase(mode, actions, logIn, logOut, apiRequest, _):
   cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {actions} {logIn} {logOut} {apiRequest}'
   res = subprocess.run(cmd, shell = True, stdout = subprocess.PIPE)
   res.check_returncode()
@@ -41,9 +41,9 @@ def runCase(case):
   data = processCaseOutput(stdout)
   data['mode'] = case[0]
   data['actions'] = case[1]
-  data['logIn'] = case[2]
-  data['logOut'] = case[3]
-  data['apiRequest'] = case[4]
+  data['logIn_threads'] = case[2]
+  data['logOut_threads'] = case[3]
+  data['apiRequest_threads'] = case[4]
 
   return data
 
