@@ -1,6 +1,7 @@
 import sys
 
 from cases import runAllCases
+from analyze import analyze
 import utils
 from utils import log
 
@@ -11,5 +12,4 @@ if __name__ == '__main__':
 
   ranges = sys.argv[1]
   df = runAllCases(ranges, utils.Ranges[ranges])
-
-  print(df.head(2), len(df), sep = '\n') # TODO: Analyze the data
+  analyze(df, ranges)
