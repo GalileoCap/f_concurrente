@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import itertools as itt
 
 ############################################################
 # S: Config ################################################
@@ -63,14 +64,14 @@ def testRanges():
   rangeActions = range(1, 5+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 3+1)] * 3
   repeat = range(3)
-  return ((modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 2 * 5 * 3**3 * 3)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 2 * 5 * 3**3 * 3)
 
 def smallRanges():
   modes = ['free', 'optimistic', 'fine-grained']
   rangeActions = range(1, 10+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 10+1)] * 3
   repeat = range(5)
-  return ((modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 3 * 10 * 10**3 * 5)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 3 * 10 * 10**3 * 5)
 
 def mediumRanges():
   modes = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
@@ -81,7 +82,7 @@ def mediumRanges():
     joinRanges(range(1, 10), range(10, 100+1, 10))
   )
   repeat = range(10)
-  return ((modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (3 * 10) * (2 * 10)**3 * 10)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (3 * 10) * (2 * 10)**3 * 10)
 
 def largeRanges():
   modes = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
@@ -92,14 +93,14 @@ def largeRanges():
     joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
   )
   repeat = range(10)
-  return ((modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (4 * 10) * (20 + 10)**3 * 10)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (4 * 10) * (20 + 10)**3 * 10)
 
-def fullRanges(): # TODO: Not full anymore, change to large
+def fullRanges():
   modes = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
   rangeActions = joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100), range(1000, 10000+1, 1000))
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 1000)] * 3
   repeat = range(10)
-  return ((modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (4 * 10) * 1000**3 * 10)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (4 * 10) * 1000**3 * 10)
 
 Ranges = {
   'test': testRanges(),

@@ -1,7 +1,6 @@
 import os
 import json
 import subprocess
-import itertools as itt
 import pandas as pd
 from statistics import median
 from tqdm import tqdm
@@ -16,9 +15,9 @@ def calcDfAndSave(df, data, fpath):
   utils.saveDf(df, fpath)
   return df
 
-def filterCases(ranges, df):
+def filterCases(cases, df):
   cached = set(df[['mode', 'actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads', 'repeat']].itertuples(index = False, name = None)) if len(df) > 0 else set()
-  for case in itt.product(*ranges):
+  for case in cases:
     if case not in cached:
       yield case
     else:
@@ -56,8 +55,8 @@ def runCase(case):
 
   return data
 
-def runAllCases(name, ranges):
-  ranges, total = ranges
+def runAllCases(name, cases):
+  cases, total = cases
   log('[runAllCases]', name, level = 'user')
 
   fpath = os.path.join(DATADIR, name + '.pkl.bz2')
@@ -65,7 +64,7 @@ def runAllCases(name, ranges):
 
   data = []
   tstamp = time()
-  for case in tqdm(filterCases(ranges, df), initial = len(df), total = total): #NOTE: Skips cached cases
+  for case in tqdm(filterCases(cases, df), initial = len(df), total = total): #NOTE: Skips cached cases
     data.append(runCase(case))
 
     # Save frequently to avoid losing data
