@@ -2,7 +2,7 @@ import os
 import json
 import subprocess
 import pandas as pd
-from statistics import median
+from statistics import median, mean, stdev
 from tqdm import tqdm
 from time import time
 
@@ -37,9 +37,18 @@ def processCaseOutput(stdout):
     mode = out[0]
     times = [int(t) for t in out[1:]]
     data[mode] = data.get(mode, []) + times
+  
+  res = dict()
+  totalTime = 0
   for mode, times in data.items():
-    data[mode] = median(times)
-  return data
+    res[f'{mode}_medianTime'] = median(times)
+    res[f'{mode}_meanTime'] = mean(times)
+    res[f'{mode}_stdTime'] = stdev(times) if len(times) > 1 else 0
+    totalTime += sum(times)
+
+  res['totalTime'] = totalTime
+
+  return res
 
 def runCase(case):
   log('[runCase] RUN', case, level = 'deepDebug')
