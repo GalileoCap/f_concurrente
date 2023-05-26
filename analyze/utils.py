@@ -11,6 +11,8 @@ BUILDDIR = os.path.join(os.getcwd(), 'build')
 
 SAVEDT = 5 * 60 # In seconds
 
+MODES = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
+
 ############################################################
 # S: Log ###################################################
 
@@ -102,7 +104,34 @@ def fullRanges():
   repeat = range(10)
   return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (4 * 10) * 1000**3 * 10)
 
+def case1Ranges(): # TODO: Rename
+  modes = MODES
+  actions = 10
+  totalThreads = 100
+  repeat = 10
+
+  def cases():
+    for thisThreads in range(totalThreads+1):
+      othersThreads = (totalThreads - thisThreads) // 2 # TODO: Rounding errors
+
+      for mode, r in itt.product(modes, range(repeat)):
+        yield (mode, actions, thisThreads, othersThreads, othersThreads, r) # logIn
+        yield (mode, actions, othersThreads, thisThreads, othersThreads, r) # logOut
+        yield (mode, actions, othersThreads, othersThreads, thisThreads, r) # apiRequest
+
+  return (cases(), len(modes) * (3 * totalThreads) * repeat)
+
+def case2Ranges(): # TODO: Rename
+  modes = MODES 
+  rangeActions = [10]
+  rangeThreads = range(100+1)
+  repeat = range(10)
+  return (itt.product(modes, rangeActions, rangeThreads, rangeThreads, rangeThreads, repeat), len(modes) * len(rangeThreads)**3 * len(repeat))
+
 Ranges = {
+  'case1': case1Ranges(),
+  'case2': case2Ranges(),
+
   'test': testRanges(),
   'small': smallRanges(),
   'medium': mediumRanges(),

@@ -52,6 +52,7 @@ def TaskRun():
   return {
     'name': 'run',
     'deps': [TaskCompile, TaskTest],
+    'outs': ['./data/test.pkl.bz2'],
 
     'capture': 1,
     'actions': [
@@ -69,9 +70,11 @@ def TaskFullExperiment():
     'actions': [
       rangesAction('test'),
       copyPrevAction('test', 'small'), rangesAction('small'),
-      copyPrevAction('small', 'medium'), rangesAction('medium'),
-      copyPrevAction('medium', 'large'), rangesAction('large'),
-      copyPrevAction('large', 'full'), rangesAction('full'),
+      rangesAction('case1'),
+      rangesAction('case2'),
+      # copyPrevAction('small', 'medium'), rangesAction('medium'),
+      # copyPrevAction('medium', 'large'), rangesAction('large'),
+      # copyPrevAction('large', 'full'), rangesAction('full'),
     ],
   }
 
