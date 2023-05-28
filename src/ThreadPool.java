@@ -1,45 +1,46 @@
-import Twiner.Twiner;
-import Twiner.User;
+import Map.*;
 import Utils.Utils;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ThreadPool {
-  public Twiner twiner; // U: Twiner that all threads share
+  public Map<Integer> map; // U: Map that all threads share
   public Semaphore startSem; // U: Semaphore to control that threads all start at the same time
-  ArrayList<User> users; // U: Created users by logIn threads
+  ArrayList<Integer> elems; // U: Elements currently in the map
   ArrayList<UserThread> threads;
 
   public static void main(String[] args) {
-    String mode = args[0]; // U: Mode for the maps Twiner uses, one of:
+    String mode = args[0]; // U: Mode for the map, one of:
                            // String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
 
     int actions = Utils.atoi(args[1]); // U: Number of actions per thread
 
     // U: Number of threads doing each action
-    int logIn = Utils.atoi(args[2]); 
-    int logOut = Utils.atoi(args[3]);
-    int apiRequest = Utils.atoi(args[4]);
+    int add = Utils.atoi(args[2]); 
+    int remove = Utils.atoi(args[3]);
+    int find = Utils.atoi(args[4]);
 
-    new ThreadPool(mode, actions, logIn, logOut, apiRequest);
+    new ThreadPool(mode, actions, add, remove, find);
   }
 
-  public ThreadPool(String mode, int actions, int logIn, int logOut, int apiRequest) {
-    int total = logIn + logOut + apiRequest;
+  public ThreadPool(String mode, int actions, int add, int remove, int find) {
+    int total = add + remove + find;
 
-    twiner = new Twiner(mode);
+    MapBuilder mapBuilder = new MapBuilder(mode);
+    map = mapBuilder.newMap();
+
     startSem = new Semaphore(total);
-    users = new ArrayList();
+    elems = new ArrayList();
     threads = new ArrayList();
 
     startSem.acquireUninterruptibly(total);
 
-    // Make sure there's an user for each thread
-    createUsers(total);
+    // Initialize the map with some elements
+    addElements(total);
 
-    spawnThreads(logIn, "logIn", actions);
-    spawnThreads(logOut, "logOut", actions);
-    spawnThreads(apiRequest, "apiRequest", actions);
+    spawnThreads(add, "add", actions);
+    spawnThreads(remove, "remove", actions);
+    spawnThreads(find, "find", actions);
 
     startSem.release(total);
 
@@ -51,10 +52,10 @@ public class ThreadPool {
     }
   }
 
-  void createUsers(int n) {
+  void addElements(int n) {
     for (int i = 0; i < n; ++i) {
-      int sid = twiner.logIn(i);
-      addUser(new User(i, sid));
+      map.add(i);
+      addElement(i);
     }
   }
 
@@ -64,19 +65,19 @@ public class ThreadPool {
     }
   }
 
-  public synchronized User getRandomUser() {
-    if (users.size() == 0) {
-      return new User(123, 123); // Invalid user
+  public synchronized Integer getRandomElement() {
+    if (elems.size() == 0) {
+      return 123; // Random element
     }
-    int idx = (int)Math.floor(Math.random() * users.size());
-    return users.get(idx);
+    int idx = (int)Math.floor(Math.random() * elems.size());
+    return elems.get(idx);
   }
 
-  public synchronized void addUser(User user) {
-    users.add(user);
+  public synchronized void addElement(Integer elem) {
+    elems.add(elem);
   }
 
-  public synchronized void removeUser(User user) {
-    users.remove(user);
+  public synchronized void removeElement(Integer elem) {
+    elems.remove(elem);
   }
 }

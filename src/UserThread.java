@@ -1,4 +1,3 @@
-import Twiner.User;
 import Utils.*;
 import java.util.ArrayList;
 
@@ -26,43 +25,43 @@ class UserThread extends Thread {
 
   void performAction() {
     switch (mode) {
-      case "logIn": logIn(); break;
-      case "logOut": logOut(); break;
-      case "apiRequest": apiRequest(); break;
+      case "add": add(); break;
+      case "remove": remove(); break;
+      case "find": find(); break;
     }
   }
 
-  void logIn() {
-    int uid = (int)Math.floor(Math.random() * Integer.MAX_VALUE);
+  void add() {
+    Integer elem = (int)Math.floor(Math.random() * Integer.MAX_VALUE);
 
     long start = System.nanoTime();
-    int sid = pool.twiner.logIn(uid);
-    long delta = System.nanoTime() - start;
-    times.add(delta); // TODO: Also report whether it was a success (sid != -1)
-
-    if (sid != -1) {
-      pool.addUser(new User(uid, sid));
-    }
-  }
-
-  void logOut() {
-    User user = pool.getRandomUser();
-
-    long start = System.nanoTime();
-    boolean success = pool.twiner.logOut(user.userId, user.sessionId);
+    boolean success = pool.map.add(elem);
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
 
     if (success) {
-      pool.removeUser(user);
+      pool.addElement(elem);
     }
   }
 
-  void apiRequest() {
-    User user = pool.getRandomUser();
+  void remove() {
+    Integer elem = pool.getRandomElement();
 
     long start = System.nanoTime();
-    Boolean success = pool.twiner.apiRequest(user.userId, user.sessionId);
+    boolean success = pool.map.remove(elem);
+    long delta = System.nanoTime() - start;
+    times.add(delta); // TODO: Also report whether it was a success
+
+    if (success) {
+      pool.removeElement(elem);
+    }
+  }
+
+  void find() {
+    Integer elem = pool.getRandomElement();
+
+    long start = System.nanoTime();
+    Integer success = pool.map.find(elem); // TODO: Change to boolean
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
   }
