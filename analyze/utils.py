@@ -107,20 +107,21 @@ def fullRanges():
 
 def case1Ranges(): # TODO: Rename
   modes = MODES
-  actions = 10
-  totalThreads = 100
-  repeat = 10
+  rangeTotalThreads = [(100, 1), (1000, 100)]
+  rangeActions = joinRanges(range(10, 100+1, 10), range(100, 1000+1, 100))
+  repeat = range(10)
 
-  def cases():
-    for thisThreads in range(totalThreads+1):
-      othersThreads = (totalThreads - thisThreads) // 2 # TODO: Rounding errors
+  def iterate():
+    for mode, (totalThreads, step), actions, r in itt.product(modes, rangeTotalThreads, rangeActions, repeat):
+      for thisThreads in range(0, totalThreads+1, step):
+        othersThreads = (totalThreads - thisThreads) // 2 
+        thisThreads += (totalThreads - thisThreads) % 2 # +1 to fix rounding errors
 
-      for mode, r in itt.product(modes, range(repeat)):
         yield (mode, actions, thisThreads, othersThreads, othersThreads, r) # logIn
         yield (mode, actions, othersThreads, thisThreads, othersThreads, r) # logOut
         yield (mode, actions, othersThreads, othersThreads, thisThreads, r) # apiRequest
 
-  return (cases(), len(modes) * (3 * totalThreads) * repeat)
+  return (iterate(), 3 * len(modes) * (100 + 10) * 20 * len(repeat)) # TODO: Calculate length
 
 def case2Ranges(): # TODO: Rename
   modes = MODES 

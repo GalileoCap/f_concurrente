@@ -1,4 +1,5 @@
 build/*
-# data/* -- push data to be ready to run analysis?
+data/*
+out/*
 .udo.db
 *.pyc
