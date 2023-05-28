@@ -16,12 +16,17 @@ def calcDfAndSave(df, data, fpath):
   return df
 
 def filterCases(cases, df):
-  cached = set(df[['mode', 'actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads', 'repeat']].itertuples(index = False, name = None)) if len(df) > 0 else set()
-  for case in cases:
-    if case not in cached:
-      yield case
-    else:
-      cached.remove(case)
+  # TODO: Fix case2 not filtering correctly
+  for i, case in enumerate(cases):
+    if i < len(df):
+      continue
+    yield case
+  # cached = set(df[['mode', 'actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads', 'repeat']].itertuples(index = False, name = None)) if len(df) > 0 else set()
+  # for case in cases:
+    # if case not in cached:
+      # yield case
+    # else:
+      # cached.remove(case)
 
 def executeCase(mode, actions, logIn, logOut, apiRequest, _):
   cmd = f'java -cp {BUILDDIR} ThreadPool {mode} {actions} {logIn} {logOut} {apiRequest}'
