@@ -34,6 +34,7 @@ def log(*args, level):
 DFCOMPRESS = 'bz2'
 
 def readDf(fpath):
+  print(fpath)
   if os.path.isfile(fpath):
     log('[readDf] LOAD', fpath, level = 'debug')
     return pd.read_pickle(fpath, compression = DFCOMPRESS)
@@ -123,10 +124,20 @@ def case1Ranges(): # TODO: Rename
 
 def case2Ranges(): # TODO: Rename
   modes = MODES 
-  rangeActions = [10]
-  rangeThreads = range(100+1)
-  repeat = range(10)
-  return (itt.product(modes, rangeActions, rangeThreads, rangeThreads, rangeThreads, repeat), len(modes) * len(rangeThreads)**3 * len(repeat))
+  rangeActions = range(3, 150, 3) # Will usually be split by three types of actions
+  repeat = 5
+
+  def cases():
+    for totalActions in rangeActions:
+      max_threads = totalActions // 3  # More threads not needed
+      rangeThreads = range(1, max_threads+1)
+      for threads in rangeThreads:
+        actions = max(totalActions // (3 * threads), 1)
+        for mode, r in itt.product(modes, range(repeat)):
+          yield (mode, actions, threads, threads, threads, r)
+
+  return (cases(), 30625) # Not sure how to calculate the total cases programmatically
+
 
 Ranges = {
   'case1': case1Ranges(),
