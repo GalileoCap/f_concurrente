@@ -16,6 +16,7 @@ public class MapBuilder {
       case "optimistic" -> new MapO<T>();
       case "fine-grained" -> new MapFG<T>();
       case "monitor" -> new MapMonitor<T>();
+      case "un" -> new MapUn<T>();
       default -> null; // TODO: Error
     };
   }

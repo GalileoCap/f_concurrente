@@ -5,7 +5,7 @@ import Map.*;
 
 class MapTest<T> extends Test {
   public static void run() {
-    String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
+    String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor", "un"};
     for (String type : types) {
       MapBuilder mb = new MapBuilder(type);
       testFindNull(mb);

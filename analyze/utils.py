@@ -11,7 +11,7 @@ BUILDDIR = os.path.join(os.getcwd(), 'build')
 
 SAVEDT = 5 * 60 # In seconds
 
-MODES = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
+MODES = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor', 'un']
 
 ############################################################
 # S: Log ###################################################
@@ -63,11 +63,12 @@ def joinRanges(*ranges):
       yield x
 
 def testRanges():
-  modes = ['free', 'monitor']
+  # modes = ['free', 'monitor', 'un']
+  modes = MODES
   rangeActions = range(1, 5+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 3+1)] * 3
   repeat = range(3)
-  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 2 * 5 * 3**3 * 3)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), len(modes) * 5 * 3**3 * 3)
 
 def smallRanges():
   modes = ['free', 'optimistic', 'fine-grained']
