@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 pandas = "*"
 tqdm = "*"
+plotly = "*"
+kaleido = "*"
 
 [dev-packages]
 

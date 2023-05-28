@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import plotly.express as px
 
 import utils
 from utils import log, OUTDIR
@@ -16,8 +17,6 @@ def analyze(df, name):
         _df = df[
           (df['totalThreads'] == totalThreads) &
           (df[current] == currentThreads)
-          # (df[current] == currentThreads) &
-          # (df['logOut_threads'] == df['apiRequest_threads'])
         ]
         if len(_df) > 0:
           stats = _df[['logIn_meanTime', 'logOut_meanTime', 'apiRequest_meanTime', 'totalTime']].agg(['mean', 'std'])
@@ -28,4 +27,20 @@ def analyze(df, name):
           data.append(_data)
 
   df = pd.DataFrame(data)
-  print(df.describe(), sep = '\n')
+  print(df.describe())
+  fig = px.scatter(
+    df,
+    x = 'opThreads',
+    y = 'totalTime_mean',
+    animation_frame = 'totalThreads',
+    # animation_group = 'op',
+    color = 'op',
+
+    log_y = True,
+    range_x = [df['opThreads'].min()-1, df['opThreads'].max()+1],
+    range_y = [df['totalTime_mean'].min(), df['totalTime_mean'].max()],
+  )
+
+  os.makedirs(OUTDIR, exist_ok = True)
+  fpath = os.path.join(OUTDIR, 'anim.html')
+  fig.write_html(fpath)
