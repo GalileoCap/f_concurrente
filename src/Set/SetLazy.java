@@ -1,8 +1,8 @@
-package Map;
+package Set;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MapLazy<T> implements Map<T> {
+public class SetLazy<T> implements Set<T> {
   class Node<T> {
     public int key;
     public T value;
@@ -28,7 +28,7 @@ public class MapLazy<T> implements Map<T> {
 
   private Node<T> head;
 
-  public MapLazy() {
+  public SetLazy() {
     head = new Node<T>(Integer.MIN_VALUE, null);
     head.next = new Node<T>(Integer.MAX_VALUE, null);
   }

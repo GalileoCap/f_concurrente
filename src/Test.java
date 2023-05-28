@@ -1,10 +1,10 @@
 package Test;
 
-import Test.MapTest;
+import Test.SetTest;
 
 class RunTests {
   public static void main(String args[]) {
-    MapTest.run();
+    SetTest.run();
   }
 }
 

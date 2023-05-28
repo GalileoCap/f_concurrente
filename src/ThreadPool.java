@@ -1,16 +1,16 @@
-import Map.*;
+import Set.*;
 import Utils.Utils;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ThreadPool {
-  public Map<Integer> map; // U: Map that all threads share
+  public Set<Integer> set; // U: Set that all threads share
   public Semaphore startSem; // U: Semaphore to control that threads all start at the same time
-  ArrayList<Integer> elems; // U: Elements currently in the map
+  ArrayList<Integer> elems; // U: Elements currently in the set
   ArrayList<UserThread> threads;
 
   public static void main(String[] args) {
-    String mode = args[0]; // U: Mode for the map, one of:
+    String mode = args[0]; // U: Mode for the set, one of:
                            // String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
 
     int actions = Utils.atoi(args[1]); // U: Number of actions per thread
@@ -26,16 +26,16 @@ public class ThreadPool {
   public ThreadPool(String mode, int actions, int add, int remove, int find) {
     int total = add + remove + find;
 
-    MapBuilder mapBuilder = new MapBuilder(mode);
-    map = mapBuilder.newMap();
+    SetBuilder setBuilder = new SetBuilder(mode);
+    set = setBuilder.newSet();
 
     startSem = new Semaphore(total);
-    elems = new ArrayList();
-    threads = new ArrayList();
+    elems = new ArrayList<Integer>();
+    threads = new ArrayList<UserThread>();
 
     startSem.acquireUninterruptibly(total);
 
-    // Initialize the map with some elements
+    // Initialize the set with some elements
     addElements(total);
 
     spawnThreads(add, "add", actions);
@@ -54,7 +54,7 @@ public class ThreadPool {
 
   void addElements(int n) {
     for (int i = 0; i < n; ++i) {
-      map.add(i);
+      set.add(i);
       addElement(i);
     }
   }

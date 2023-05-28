@@ -1,6 +1,6 @@
-package Map;
+package Set;
 
-public class MapMonitor<T> implements Map<T> {
+public class SetMonitor<T> implements Set<T> {
   class Node<T> {
     public int key;
     public T value;
@@ -14,7 +14,7 @@ public class MapMonitor<T> implements Map<T> {
 
   private Node<T> head;
 
-  public MapMonitor() {
+  public SetMonitor() {
     head = new Node<T>(Integer.MIN_VALUE, null);
     head.next = new Node<T>(Integer.MAX_VALUE, null);
   }

@@ -1,8 +1,8 @@
-package Map;
+package Set;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MapO<T> implements Map<T> {
+public class SetO<T> implements Set<T> {
   class Node<T> {
     public int key;
     public T value;
@@ -26,7 +26,7 @@ public class MapO<T> implements Map<T> {
 
   private Node<T> head;
 
-  public MapO() {
+  public SetO() {
     head = new Node<T>(Integer.MIN_VALUE, null);
     head.next = new Node<T>(Integer.MAX_VALUE, null);
   }

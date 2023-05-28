@@ -35,7 +35,7 @@ class UserThread extends Thread {
     Integer elem = (int)Math.floor(Math.random() * Integer.MAX_VALUE);
 
     long start = System.nanoTime();
-    boolean success = pool.map.add(elem);
+    boolean success = pool.set.add(elem);
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
 
@@ -48,7 +48,7 @@ class UserThread extends Thread {
     Integer elem = pool.getRandomElement();
 
     long start = System.nanoTime();
-    boolean success = pool.map.remove(elem);
+    boolean success = pool.set.remove(elem);
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
 
@@ -61,7 +61,7 @@ class UserThread extends Thread {
     Integer elem = pool.getRandomElement();
 
     long start = System.nanoTime();
-    Integer success = pool.map.find(elem); // TODO: Change to boolean
+    Integer success = pool.set.find(elem); // TODO: Change to boolean
     long delta = System.nanoTime() - start;
     times.add(delta); // TODO: Also report whether it was a success
   }

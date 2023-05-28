@@ -1,8 +1,8 @@
-package Map;
+package Set;
 
 import java.util.concurrent.atomic.AtomicMarkableReference;
 
-public class MapFree<T> implements Map<T> {
+public class SetFree<T> implements Set<T> {
   class Node<T> {
     public int key;
     public T value;
@@ -23,7 +23,7 @@ public class MapFree<T> implements Map<T> {
 
   private Node<T> head;
 
-  public MapFree() {
+  public SetFree() {
     head = new Node<T>(Integer.MIN_VALUE, null);
 
     Node<T> tail = new Node<T>(Integer.MAX_VALUE, null);

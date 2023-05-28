@@ -1,24 +1,24 @@
 package Test;
 
 import Test.Test;
-import Map.*;
+import Set.*;
 
-class MapTest<T> extends Test {
+class SetTest<T> extends Test {
   public static void run() {
     String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
     for (String type : types) {
-      MapBuilder mb = new MapBuilder(type);
-      testFindNull(mb);
-      testAddAndFind(mb);
-      testAddAndFindMany(mb);
-      testRemove(mb);
+      SetBuilder sb = new SetBuilder(type);
+      testFindNull(sb);
+      testAddAndFind(sb);
+      testAddAndFindMany(sb);
+      testRemove(sb);
     }
   }
 
-  static void testFindNull(MapBuilder mb) {
-    printCase(String.format("Map(%s)", mb.type), "findNull");
+  static void testFindNull(SetBuilder sb) {
+    printCase(String.format("Set(%s)", sb.type), "findNull");
 
-    Map<String> m = mb.newMap();
+    Set<String> m = sb.newSet();
     String s = m.find(0);
 
     Assert(s == null);
@@ -26,10 +26,10 @@ class MapTest<T> extends Test {
     Success();
   }
 
-  static void testAddAndFind(MapBuilder mb) {
-    printCase(String.format("Map(%s)", mb.type), "addAndFind");
+  static void testAddAndFind(SetBuilder sb) {
+    printCase(String.format("Set(%s)", sb.type), "addAndFind");
 
-    Map<String> m = mb.newMap();
+    Set<String> m = sb.newSet();
     String s = "Ahoy there!";
     int key = s.hashCode();
     
@@ -41,10 +41,10 @@ class MapTest<T> extends Test {
     Success();
   }
 
-  static void testAddAndFindMany(MapBuilder mb) {
-    printCase(String.format("Map(%s)", mb.type), "addAndFindMany");
+  static void testAddAndFindMany(SetBuilder sb) {
+    printCase(String.format("Set(%s)", sb.type), "addAndFindMany");
 
-    Map<String> m = mb.newMap();
+    Set<String> m = sb.newSet();
     String s0 = "Ahoy there!";
     String s1 = "My friend!";
     int k0 = s0.hashCode();
@@ -59,10 +59,10 @@ class MapTest<T> extends Test {
     Success();
   }
 
-  static void testRemove(MapBuilder mb) {
-    printCase(String.format("Map(%s)", mb.type), "addAndRemove");
+  static void testRemove(SetBuilder sb) {
+    printCase(String.format("Set(%s)", sb.type), "addAndRemove");
 
-    Map<String> m = mb.newMap();
+    Set<String> m = sb.newSet();
     String s = "Ahoy there!";
     int key = s.hashCode();
     
