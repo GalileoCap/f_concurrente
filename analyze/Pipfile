@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 pandas = "*"
 tqdm = "*"
+notebook = "*"
+ipykernel = "*"
+matplotlib = "*"
+seaborn = "*"
 
 [dev-packages]
 
