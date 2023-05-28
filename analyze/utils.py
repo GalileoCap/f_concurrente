@@ -71,11 +71,11 @@ def testRanges():
   return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), len(modes) * 5 * 3**3 * 3)
 
 def smallRanges():
-  modes = ['free', 'optimistic', 'fine-grained']
+  modes = MODES
   rangeActions = range(1, 10+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 10+1)] * 3
   repeat = range(5)
-  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 3 * 10 * 10**3 * 5)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), len(modes) * 10 * 10**3 * 5)
 
 def mediumRanges():
   modes = ['free', 'lazy', 'optimistic', 'fine-grained', 'monitor']
