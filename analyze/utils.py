@@ -154,8 +154,12 @@ Ranges = {
 ############################################################
 # S: Misc ##################################################
 
-def htmlPath(name):
-  return os.path.join(OUTDIR, f'{name}.html')
+def htmlPath(fbase, name):
+  fbase = os.path.join(OUTDIR, fbase)
+  os.makedirs(fbase, exist_ok = True)
+  return os.path.join(fbase, f'{name}.html')
 
-def imgPath(name):
-  return os.path.join(OUTDIR, f'{name}.png')
+def imgPath(fbase, name):
+  fbase = os.path.join(OUTDIR, fbase)
+  os.makedirs(fbase, exist_ok = True)
+  return os.path.join(fbase, f'{name}.png')
