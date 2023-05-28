@@ -54,19 +54,6 @@ public class MapMonitor<T> implements Map<T> {
     }
   }
 
-  public synchronized T findAfter(int key) {
-    Node<T> prev = head,
-            curr = prev.next;
-    while (curr.key <= key) {
-      prev = curr;
-      curr = curr.next;
-    }
-
-    if (curr.key == Integer.MAX_VALUE)
-      return null;
-    return curr.value;
-  }
-
   public synchronized T find(int key) {
     Node<T> prev = head,
             curr = prev.next;

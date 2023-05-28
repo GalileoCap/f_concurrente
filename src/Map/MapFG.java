@@ -82,27 +82,6 @@ public class MapFG<T> implements Map<T> {
     }
   }
 
-  public T findAfter(int key) {
-    Node<T> prev, curr;
-    prev = head; prev.lock();
-    curr = prev.next; curr.lock();
-    try {
-      while (curr.key <= key) {
-        prev.unlock();
-        prev = curr;
-        curr = curr.next;
-        curr.lock();
-      }
-
-      if (curr.key == Integer.MAX_VALUE)
-        return null;
-      return curr.value;
-    } finally {
-      curr.unlock();
-      prev.unlock();
-    }
-  }
-
   public T find(int key) {
     Node<T> prev, curr;
     prev = head; prev.lock();

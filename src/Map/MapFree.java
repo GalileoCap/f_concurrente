@@ -94,10 +94,6 @@ public class MapFree<T> implements Map<T> {
     }
   }
 
-  public synchronized T findAfter(int key) {
-    return find(key+1);
-  }
-
   public synchronized T find(int key) {
     Node<T> prev, curr;
 

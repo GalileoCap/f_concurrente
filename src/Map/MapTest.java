@@ -12,7 +12,6 @@ class MapTest<T> extends Test {
       testAddAndFind(mb);
       testAddAndFindMany(mb);
       testRemove(mb);
-      testFindAfter(mb);
     }
   }
 
@@ -71,33 +70,6 @@ class MapTest<T> extends Test {
     m.remove(key);
 
     Assert(m.find(key) == null, "Still found s"); 
-
-    Success();
-  }
-
- static void testFindAfter(MapBuilder mb) {
-    printCase(String.format("Map(%s)", mb.type), "findAfter");
-
-    class Item {
-      int hash;
-      public Item(int _hash) {
-        hash = _hash;
-      }
-
-      public int hashCode() {
-        return hash;
-      }
-    }
-
-    Map<Item> m = mb.newMap();
-    Item i0 = new Item(0);
-    Item i1 = new Item(1);
-    
-    m.add(i0);
-    m.add(i1);
-
-    Assert(m.findAfter(0) == i1, "Couldn't find i1"); 
-    Assert(m.findAfter(1) == null, "Found another element");
 
     Success();
   }
