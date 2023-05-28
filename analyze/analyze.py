@@ -11,12 +11,17 @@ def analyze(df, name):
   print(df.head())
 
   df['totalThreads'] = df['logIn_threads'] + df['logOut_threads'] + df['apiRequest_threads']
+  df['totalActions'] = df['actions'] * df['totalThreads']
 
   for op in ['logIn', 'logOut', 'apiRequest']:
-    xaxis, zaxis, color = f'{op}_threads', 'totalThreads', 'mode'
-    fpath = os.path.join(OUTDIR, f'{op}.html')
-    foo(df, xaxis, f'{op}_meanTime', zaxis, color, fpath)
-    # foo(df, xaxis, 'totalTime', zaxis, color, fpath)
+    foo(df, f'{op}_threads', f'{op}_meanTime', 'totalThreads', 'mode', utils.htmlPath(f'{op}_op'))
+    foo(df, f'{op}_threads', 'totalTime', 'totalThreads', 'mode', utils.htmlPath(f'{op}_total'))
+
+    foo(df, 'totalThreads', f'{op}_meanTime', 'actions', 'mode', utils.htmlPath(f'{op}_actions'))
+    foo(df, 'totalThreads', f'{op}_meanTime', 'totalActions', 'mode', utils.htmlPath(f'{op}_totalActions'))
+
+  foo(df, 'totalThreads', 'totalTime', 'actions', 'mode', utils.htmlPath('total_actions'))
+  foo(df, 'totalThreads', 'totalTime', 'totalActions', 'mode', utils.htmlPath('total_totalActions'))
 
 def foo(df, xaxis, yaxis, zaxis, color, fpath):
   dfNoDup = df[[xaxis, yaxis, zaxis, color]].drop_duplicates() # TODO: Why this?

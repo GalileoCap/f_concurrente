@@ -150,3 +150,12 @@ Ranges = {
   'large': largeRanges(),
   'full': fullRanges(),
 }
+
+############################################################
+# S: Misc ##################################################
+
+def htmlPath(name):
+  return os.path.join(OUTDIR, f'{name}.html')
+
+def imgPath(name):
+  return os.path.join(OUTDIR, f'{name}.png')
