@@ -160,3 +160,6 @@ def imgPath(fbase, name):
   fbase = os.path.join(OUTDIR, fbase)
   os.makedirs(fbase, exist_ok = True)
   return os.path.join(fbase, f'{name}.png')
+
+def dfPath(name):
+  return os.path.join(DATADIR, name + '.pkl.bz2')

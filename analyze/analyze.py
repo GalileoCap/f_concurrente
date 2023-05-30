@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 import plotly.express as px
 import itertools as itt
@@ -49,28 +50,30 @@ def analyze(df, name):
   )
 
   data = []
-  for current in ['logIn', 'logOut', 'apiRequest']:
+  for mode, current, totalThreads in itt.product(df['mode'].unique(), ['logIn', 'logOut', 'apiRequest'], range(df['totalThreads'].min(), df['totalThreads'].max()+1)):
     threadsCol = f'{current}_threads'
-    for totalThreads in range(df['totalThreads'].min(), df['totalThreads'].max()+1):
-      for currentThreads in range(df[threadsCol].min(), df[threadsCol].max()+1): # NOTE: Assumes all types have the same range
-        _df = df[
-          (df['totalThreads'] == totalThreads) &
-          (df[threadsCol] == currentThreads)
-        ]
-        if len(_df) > 0:
-          stats = _df[['logIn_meanTime', 'logOut_meanTime', 'apiRequest_meanTime', 'totalTime']].agg(['mean', 'std'])
-          _data = {'op': current, 'totalThreads': totalThreads, 'opThreads': currentThreads}
-          for idx, row in stats.iterrows():
-            for col, value in row.items():
-              _data[f'{col}_{idx}'] = value
-          data.append(_data)
+    for currentThreads in range(df[threadsCol].min(), df[threadsCol].max()+1):
+      _df = df[
+        (df['mode'] == mode) &
+        (df['totalThreads'] == totalThreads) &
+        (df[threadsCol] == currentThreads)
+      ]
+      if len(_df) > 0:
+        stats = _df[['logIn_meanTime', 'logOut_meanTime', 'apiRequest_meanTime', 'totalTime']].agg(['mean', 'std'])
+        _data = {'mode': mode, 'op': current, 'totalThreads': totalThreads, 'opThreads': currentThreads}
+        for idx, row in stats.iterrows():
+          for col, value in row.items():
+            _data[f'{col}_{idx}'] = value
+        data.append(_data)
 
   df = pd.DataFrame(data)
 
   df['opThreads%'] = df['opThreads'] / df['totalThreads'] * 100
 
-  bar(df, 'opThreads', 'totalTime_mean', None, None, 'op', utils.htmlPath(name, 'opsTimes'))
-  bar(df, 'opThreads%', 'totalTime_mean', None, None, 'op', utils.htmlPath(name, 'opsTimes%'))
+  foo(df, 'opThreads', 'totalTime_mean', None, 'mode', 'op', utils.htmlPath(name, 'opsTimes'))
+  foo(df, 'opThreads%', 'totalTime_mean', None, 'mode', 'op', utils.htmlPath(name, 'opsTimes%'))
+  foo(df, 'opThreads', 'totalTime_mean', None, 'op', 'mode', utils.htmlPath(name, 'opsTimes_alt'))
+  foo(df, 'opThreads%', 'totalTime_mean', None, 'op', 'mode', utils.htmlPath(name, 'opsTimes%_alt'))
   # foo(df, 'opThreads', 'totalTime_mean', None, 'totalThreads', 'op', utils.htmlPath(name, 'opsTimes')) # TODO: opTime
 
   uglyPlots(df, name)
@@ -113,3 +116,11 @@ def bar(df, xaxis, yaxis, error, zaxis, color, fpath, force = False):
 
   fig.write_html(fpath)
 
+if __name__ == '__main__':
+  if len(sys.argv) == 1:
+    log(f'Please pass which ranges to use, one of: {list(utils.Ranges.keys())}', level = 'error')
+    sys.exit(0)
+
+  ranges = sys.argv[1]
+  df = utils.readDf(utils.dfPath(ranges))
+  analyze(df, ranges)

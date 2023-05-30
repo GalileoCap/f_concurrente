@@ -73,7 +73,7 @@ def runAllCases(name, cases):
   cases, total = cases
   log('[runAllCases]', name, level = 'user')
 
-  fpath = os.path.join(DATADIR, name + '.pkl.bz2')
+  fpath = utils.dfPath(name)
   df = utils.readDf(fpath) # Try to read cached cases
 
   data = []
