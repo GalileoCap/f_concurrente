@@ -48,6 +48,31 @@ def analyze(df, name):
     utils.htmlPath(name, 'total_totalActions')
   )
 
+  data = []
+  for current in ['logIn', 'logOut', 'apiRequest']:
+    threadsCol = f'{current}_threads'
+    for totalThreads in range(df['totalThreads'].min(), df['totalThreads'].max()+1):
+      for currentThreads in range(df[threadsCol].min(), df[threadsCol].max()+1): # NOTE: Assumes all types have the same range
+        _df = df[
+          (df['totalThreads'] == totalThreads) &
+          (df[threadsCol] == currentThreads)
+        ]
+        if len(_df) > 0:
+          stats = _df[['logIn_meanTime', 'logOut_meanTime', 'apiRequest_meanTime', 'totalTime']].agg(['mean', 'std'])
+          _data = {'op': current, 'totalThreads': totalThreads, 'opThreads': currentThreads}
+          for idx, row in stats.iterrows():
+            for col, value in row.items():
+              _data[f'{col}_{idx}'] = value
+          data.append(_data)
+
+  df = pd.DataFrame(data)
+
+  df['opThreads%'] = df['opThreads'] / df['totalThreads'] * 100
+
+  bar(df, 'opThreads', 'totalTime_mean', None, None, 'op', utils.htmlPath(name, 'opsTimes'))
+  bar(df, 'opThreads%', 'totalTime_mean', None, None, 'op', utils.htmlPath(name, 'opsTimes%'))
+  # foo(df, 'opThreads', 'totalTime_mean', None, 'totalThreads', 'op', utils.htmlPath(name, 'opsTimes')) # TODO: opTime
+
   uglyPlots(df, name)
 
 def uglyPlots(df, name):
@@ -63,14 +88,17 @@ def uglyPlots(df, name):
     except: pass
 
 def foo(df, xaxis, yaxis, error, zaxis, color, fpath, force = False):
-  if not force and os.path.isfile(fpath):
-    return
-
   dfNoDup = df[[xaxis, yaxis, zaxis, color]].drop_duplicates() # TODO: Why this?
   if error is not None:
     dfNoDup = df[[xaxis, yaxis, error, zaxis, color]].drop_duplicates()
+  return bar(dfNoDup, xaxis, yaxis, error, zaxis, color, fpath, force = force)
+
+def bar(df, xaxis, yaxis, error, zaxis, color, fpath, force = False):
+  if not force and os.path.isfile(fpath):
+    return
+
   fig = px.scatter(
-    dfNoDup,
+    df,
     x = xaxis,
     y = yaxis,
     animation_frame = zaxis,
@@ -79,8 +107,9 @@ def foo(df, xaxis, yaxis, error, zaxis, color, fpath, force = False):
     error_y = error,
 
     log_y = True,
-    range_x = [dfNoDup[xaxis].min()-1, dfNoDup[xaxis].max()+1],
-    range_y = [dfNoDup[yaxis].min(), dfNoDup[yaxis].max()],
+    range_x = [df[xaxis].min()-1, df[xaxis].max()+1],
+    range_y = [df[yaxis].min(), df[yaxis].max()],
   )
 
   fig.write_html(fpath)
+
