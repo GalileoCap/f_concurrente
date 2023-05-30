@@ -79,13 +79,16 @@ def runAllCases(name, cases):
   data = []
   tstamp = time()
   for case in tqdm(filterCases(cases, df), initial = len(df), total = total): #NOTE: Skips cached cases
-    data.append(runCase(case))
+    try:
+      data.append(runCase(case))
 
-    # Save frequently to avoid losing data
-    if (time() - tstamp) > SAVEDT:
-      df = calcDfAndSave(df, data, fpath)
-      data.clear() 
-      tstamp = time()
+      # Save frequently to avoid losing data
+      if (time() - tstamp) > SAVEDT:
+        df = calcDfAndSave(df, data, fpath)
+        data.clear() 
+        tstamp = time()
+    except Exception as err:
+      log('Error with case', case, err, level = 'error')
 
   log('[runAllCases] DONE', name, level = 'user')
   return calcDfAndSave(df, data, fpath)
