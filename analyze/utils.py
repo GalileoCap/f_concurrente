@@ -126,7 +126,7 @@ def case1Ranges(): # TODO: Rename
 def case2Ranges(): # TODO: Rename
   modes = MODES
   totalThreadsRange = range(1, 150+1, 3)
-  actionsRange = range(1, 1000+1, 100)
+  actionsRange = range(100, 1000+1, 100)
   repeatRange = range(10)
 
   def iterate():
