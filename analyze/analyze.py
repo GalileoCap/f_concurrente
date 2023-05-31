@@ -25,6 +25,8 @@ def specificPlots(df, name):
   fbase = f'{name}_specific'
   if name == 'small':
     smallPlots(df, fbase)
+  elif name == 'case1':
+    case1Plots(df, fbase)
 
 def smallPlots(df, fbase):
   _df = df.copy()
@@ -55,6 +57,49 @@ def smallPlots(df, fbase):
       yaxis_title = 'Tiempo total promedio (ns)',
       legend_title = 'Modo de sincronización',
     )) # TODO: Fpath
+
+def case1Plots(df, fbase):
+  _df = df.copy()
+
+  # df = _df[(_df['actions'] == 10) & (5 <= _df['totalThreads']) & (_df['totalThreads'] < 30)].copy()
+  for op in ['logIn', 'logOut', 'apiRequest']:
+    foo(df, f'{op}_threads', f'{op}_meanTime', False, None, 'mode', utils.imgPath(fbase, f'{op}Threads_meanTime'), layout = dict(
+      # title = 'Tiempo promedio para ejecutar una acción',
+      xaxis_title = f'Porcentaje de threads ejecutando {op}',
+      yaxis_title = f'Tiempo promedio por {op} (ns)',
+      legend_title = 'Modo de sincronización',
+    ))
+    foo(df, f'{op}_threads', 'totalTime', False, None, 'mode', utils.imgPath(fbase, f'{op}Threads_totalTime'), layout = dict(
+      # title = 'Tiempo promedio para ejecutar una acción',
+      xaxis_title = f'Porcentaje de threads ejecutando {op}',
+      yaxis_title = f'Tiempo promedio total (ns)',
+      legend_title = 'Modo de sincronización',
+    ))
+    foo(df, 'actions', f'{op}_meanTime', None, None, 'mode', utils.imgPath(fbase, f'actions_{op}_meanTime'), layout = dict(
+      # title = 'Tiempo promedio para ejecutar una acción',
+      xaxis_title = 'Acciones por thread',
+      yaxis_title = f'Tiempo promedio por {op} (ns)',
+      legend_title = 'Modo de sincronización',
+    )) # TODO: Fpath
+    foo(df, 'totalActions', f'{op}_meanTime', None, None, 'mode', utils.imgPath(fbase, f'totalActions_{op}_meanTime'), layout = dict(
+      # title = 'Tiempo promedio para ejecutar una acción',
+      xaxis_title = 'Acciones totales',
+      yaxis_title = f'Tiempo promedio por {op} (ns)',
+      legend_title = 'Modo de sincronización',
+    )) # TODO: Fpath
+
+  foo(df, 'actions', 'totalTime', None, None, 'mode', utils.imgPath(fbase, 'actions_total'), layout = dict(
+    # title = 'Tiempo promedio para ejecutar todas las acciones',
+    xaxis_title = 'Acciones por thread',
+    yaxis_title = 'Tiempo total promedio (ns)',
+    legend_title = 'Modo de sincronización',
+  )) # TODO: Fpath
+  foo(df, 'totalActions', 'totalTime', None, None, 'mode', utils.imgPath(fbase, 'totalActions_total'), layout = dict(
+    # title = 'Tiempo promedio para ejecutar todas las acciones',
+    xaxis_title = 'Acciones totales',
+    yaxis_title = 'Tiempo total promedio (ns)',
+    legend_title = 'Modo de sincronización',
+  )) # TODO: Fpath
 
 def genericPlots(df, name):
   for op in ['logIn', 'logOut', 'apiRequest']:
