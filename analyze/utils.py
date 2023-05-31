@@ -124,7 +124,7 @@ def case1Ranges(): # TODO: Rename
 
 def case2Ranges(): # TODO: Rename
   modes = MODES
-  totalThreadsRange = range(1, 150+1, 3)
+  totalThreadsRange = range(3, 150+1, 3)
   actionsRange = range(10, 100+1, 10)
   repeatRange = range(10)
 
@@ -138,13 +138,13 @@ def case2Ranges(): # TODO: Rename
 
 def case3Ranges(): # TODO: Rename
   modes = MODES
-  totalThreadsRange = range(1, 300+1, 3)
+  totalThreadsRange = range(3, 300+1, 3)
   totalActionsRange = [3 * 100]
   repeatRange = range(10)
 
   def iterate():
     for mode, totalThreads, totalActions, r in itt.product(modes, totalThreadsRange, totalActionsRange, repeatRange):
-      actions = totalActions // 3
+      actions = totalActions // totalThreads
       eachThreads = totalThreads // 3
 
       yield (mode, actions, eachThreads, eachThreads, eachThreads, r)
