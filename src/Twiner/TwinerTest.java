@@ -4,7 +4,7 @@ import Test.Test;
 import Twiner.Twiner;
 
 class TwinerTest extends Test {
-  private static String mapType = "monitor";
+  private static String mapType = "fine-grained";
 
   public static void run() {
     testLogIn();

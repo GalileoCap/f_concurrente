@@ -12,7 +12,7 @@ public class ThreadPool {
 
   public static void main(String[] args) {
     String mode = args[0]; // U: Mode for the maps Twiner uses, one of:
-                           // String[] types = {"free", "lazy", "optimistic", "fine-grained", "monitor"};
+                           // String[] types = {"free", "optimistic", "fine-grained"};
 
     int actions = Utils.atoi(args[1]); // U: Number of actions per thread
 

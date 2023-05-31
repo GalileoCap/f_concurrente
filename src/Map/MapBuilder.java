@@ -12,10 +12,8 @@ public class MapBuilder {
   public <T> Map<T> newMap() {
     return switch (type) {
       case "free" -> new MapFree<T>();
-      case "lazy" -> new MapLazy<T>();
       case "optimistic" -> new MapO<T>();
       case "fine-grained" -> new MapFG<T>();
-      case "monitor" -> new MapMonitor<T>();
       default -> null; // TODO: Error
     };
   }
