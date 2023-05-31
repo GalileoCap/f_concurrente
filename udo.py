@@ -70,8 +70,8 @@ def TaskFullExperiment():
     'actions': [
       rangesAction('case1'),
       rangesAction('case2'),
-      rangesAction('small'),
       rangesAction('case3'),
+      rangesAction('small'),
       # copyPrevAction('small', 'medium'), rangesAction('medium'),
       # copyPrevAction('medium', 'large'), rangesAction('large'),
       # copyPrevAction('large', 'full'), rangesAction('full'),

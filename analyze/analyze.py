@@ -27,6 +27,10 @@ def specificPlots(df, name):
     smallPlots(df, fbase)
   elif name == 'case1':
     case1Plots(df, fbase)
+  elif name == 'case2':
+    case2Plots(df, fbase)
+  elif name == 'case3':
+    case3Plots(df, fbase)
 
 def smallPlots(df, fbase):
   _df = df.copy()
@@ -100,6 +104,43 @@ def case1Plots(df, fbase):
     yaxis_title = 'Tiempo total promedio (ns)',
     legend_title = 'Modo de sincronización',
   )) # TODO: Fpath
+
+def case2Plots(df, fbase):
+  _df = df.copy()
+
+  df = _df[(_df['actions'] == 100)]
+  for op in ['logIn', 'logOut', 'apiRequest']:
+    foo(df, 'totalThreads', f'{op}_meanTime', None, None, 'mode', utils.imgPath(fbase, f'totalThreads_{op}MeanTime'), layout = dict(
+      # title = 'Tiempo promedio para ejecutar una acción',
+      xaxis_title = f'Cantidad total de threads',
+      yaxis_title = f'Tiempo promedio por {op} (ns)',
+      legend_title = 'Modo de sincronización',
+    ))
+
+  foo(df, 'totalThreads', 'totalTime', None, None, 'mode', utils.imgPath(fbase, f'totalThreads_totalTime'), layout = dict(
+    # title = 'Tiempo promedio para ejecutar una acción',
+    xaxis_title = f'Cantidad total de threads',
+    yaxis_title = f'Tiempo promedio en total (ns)',
+    legend_title = 'Modo de sincronización',
+  ))
+
+def case3Plots(df, fbase):
+  _df = df.copy()
+
+  for op in ['logIn', 'logOut', 'apiRequest']:
+    foo(df, 'totalThreads', f'{op}_meanTime', None, None, 'mode', utils.imgPath(fbase, f'totalThreads_{op}MeanTime'), layout = dict(
+      # title = 'Tiempo promedio para ejecutar una acción',
+      xaxis_title = f'Cantidad de threads en total',
+      yaxis_title = f'Tiempo promedio por {op} (ns)',
+      legend_title = 'Modo de sincronización',
+    ))
+
+  foo(df, 'totalThreads', 'totalTime', None, None, 'mode', utils.imgPath(fbase, f'totalThreads_totalTime'), layout = dict(
+    # title = 'Tiempo promedio para ejecutar una acción',
+    xaxis_title = f'Cantidad de threads en total',
+    yaxis_title = f'Tiempo promedio en total (ns)',
+    legend_title = 'Modo de sincronización',
+  ))
 
 def genericPlots(df, name):
   for op in ['logIn', 'logOut', 'apiRequest']:
