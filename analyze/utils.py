@@ -145,7 +145,7 @@ def case3Ranges(): # TODO: Rename
 
   def iterate():
     for mode, totalThreads, totalActions, r in itt.product(modes, totalThreadsRange, totalActionsRange, repeatRange):
-      actions = totalActions // 3
+      actions = totalActions // totalThreads
       eachThreads = totalThreads // 3
 
       yield (mode, actions, eachThreads, eachThreads, eachThreads, r)
