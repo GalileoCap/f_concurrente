@@ -33,6 +33,18 @@ def TaskCompile():
     ],
   }
 
+def TaskPipenv():
+  return {
+    'name': 'pipenv',
+    'deps': ['./analyze/Pipfile', './analyze/Pipfile.lock'],
+    'outs': ['./analyze/.venv'],
+    'clean': False,
+
+    'actions': [
+      'PIPENV_PIPFILE=./analyze/Pipfile pipenv install',
+    ],
+  }
+
 def TaskTest():
   return {
     'name': 'test',
@@ -47,7 +59,7 @@ def TaskTest():
 def TaskRun():
   return {
     'name': 'run',
-    'deps': [TaskTest],
+    'deps': [TaskTest, TaskPipenv],
     'outs': ['./data/test.pkl.bz2'],
 
     'capture': 1,
@@ -60,7 +72,7 @@ def TaskFullExperiment():
   cases = ['case1', 'case2', 'case3', 'small'] # , 'medium', 'large', 'full']
   return {
     'name': 'full',
-    'deps': [TaskCompile, TaskTest],
+    'deps': [TaskTest, TaskPipenv],
     'outs': [f'./data/{case}.pkl.bz2' for case in cases],
     'skipRun': True,
     'clean': False,

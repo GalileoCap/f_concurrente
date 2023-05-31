@@ -25,11 +25,13 @@ Se necesita `python 3.11` con `Pipenv` (y si no se tiene la versión correcta de
 * Opción 1: Descargar y correr [udo](dev.galileocap.me/udo)
 * Opción 2: 
 ```bash
+PIPENV_PIPFILE=./analyze/Pipfile pipenv install
 PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py
 ```
 
 ### Extra
 Se puede ejecutar el archivo `analyze/convert_csv.py` para convertir los pickle guardados en csv.
 ```bash
+PIPENV_PIPFILE=./analyze/Pipfile pipenv install
 PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/convert_csv.py
 ```
