@@ -1,62 +1,20 @@
 import os
 import sys
 import pandas as pd
+import plotly.express as px
 import itertools as itt
 
-import plot
 import utils
-from utils import log
+from utils import log, OUTDIR
 
 def analyze(df, name):
   cols = ['mode', 'actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads']
   df = df.groupby(cols).mean().reset_index()
+  print(df.head())
 
   df['totalThreads'] = df['logIn_threads'] + df['logOut_threads'] + df['apiRequest_threads']
   df['totalActions'] = df['actions'] * df['totalThreads']
 
-  specificPlots(df, name)
-  genericPlots(df, name)
-  opTimePlots(df, name)
-  # uglyPlots(df, name)
-
-def specificPlots(df, name):
-  plot.garbage() #NOTE: Fixes "Loading [MathJax]/extensions/MathMenu.js" showing in other pdf plots
-
-  fbase = f'{name}_specific'
-  if name == 'small':
-    smallPlots(df, fbase)
-
-def smallPlots(df, fbase):
-  _df = df.copy()
-
-  # df = _df[(_df['actions'] == 10) & (5 <= _df['totalThreads']) & (_df['totalThreads'] < 30)].copy()
-  for op in ['logIn', 'logOut', 'apiRequest']:
-    foo(df, 'totalThreads', f'{op}_meanTime', None, None, 'mode', utils.imgPath(fbase, f'{op}_meanTime'), layout = dict(
-      # title = 'Tiempo promedio para ejecutar una acción',
-      xaxis_title = 'Threads totales',
-      yaxis_title = f'Tiempo promedio por {op} (ns)',
-      legend_title = 'Modo de sincronización',
-    )) # TODO: Fpath
-
-  foo(df, 'totalThreads', 'totalTime', None, None, 'mode', utils.imgPath(fbase, 'total'), layout = dict(
-    # title = 'Tiempo promedio para ejecutar todas las acciones',
-    xaxis_title = 'Threads totales',
-    yaxis_title = 'Tiempo total promedio (ns)',
-    legend_title = 'Modo de sincronización',
-  )) # TODO: Fpath
-
-  # df = _df[(_df['actions'] == 10) & (5 <= _df['totalThreads']) & (_df['totalThreads'] < 30)]
-  for op in ['logIn', 'logOut', 'apiRequest']:
-    df[f'{op}_threads%'] = df[f'{op}_threads'] / df['totalThreads'] * 100
-    df[f'{op}_threads%'] = df[f'{op}_threads%'].round()
-    foo(df, f'{op}_threads%', 'totalTime', False, None, 'mode', utils.imgPath(fbase, f'{op}pct_totalTime'), layout = dict( # TODO: Error = False or None?
-      # title = 'Tiempo promedio para ejecutar todas las acciones',
-      xaxis_title = f'Porcentaje de threads ejecutando {op}',
-      yaxis_title = 'Tiempo total promedio (ns)',
-      legend_title = 'Modo de sincronización',
-    )) # TODO: Fpath
-
-def genericPlots(df, name):
   for op in ['logIn', 'logOut', 'apiRequest']:
     foo(
       df,
@@ -91,7 +49,10 @@ def genericPlots(df, name):
     utils.htmlPath(name, 'total_totalActions')
   )
 
-def opTimePlots(df, name):
+  opsTimes(df, name)
+  uglyPlots(df, name)
+
+def opsTimes(df, name):
   data = []
   for mode, current, totalThreads in itt.product(df['mode'].unique(), ['logIn', 'logOut', 'apiRequest'], range(df['totalThreads'].min(), df['totalThreads'].max()+1)):
     threadsCol = f'{current}_threads'
@@ -110,14 +71,10 @@ def opTimePlots(df, name):
         data.append(_data)
 
   df = pd.DataFrame(data)
-
   df['opThreads%'] = df['opThreads'] / df['totalThreads'] * 100
 
-  foo(df, 'opThreads', 'totalTime_mean', None, 'mode', 'op', utils.htmlPath(name, 'opsTimes'))
-  foo(df, 'opThreads%', 'totalTime_mean', None, 'mode', 'op', utils.htmlPath(name, 'opsTimes%'))
-  foo(df, 'opThreads', 'totalTime_mean', None, 'op', 'mode', utils.htmlPath(name, 'opsTimes_alt'))
-  foo(df, 'opThreads%', 'totalTime_mean', None, 'op', 'mode', utils.htmlPath(name, 'opsTimes%_alt'))
-  # foo(df, 'opThreads', 'totalTime_mean', None, 'totalThreads', 'op', utils.htmlPath(name, 'opsTimes')) # TODO: opTime
+  for op in df['op'].unique():
+    foo(df[df['op'] == op], 'opThreads%', 'totalTime_mean', None, 'totalThreads', 'mode', utils.htmlPath(name, f'opsTimes%_{op}'))
 
 def uglyPlots(df, name):
   xaxis = ['actions', 'logIn_threads', 'logOut_threads', 'apiRequest_threads', 'totalThreads', 'totalActions']
@@ -131,22 +88,28 @@ def uglyPlots(df, name):
     try: foo(df, c1, c2, None, c3, c4, fpath)
     except: pass
 
-def foo(df, xaxis, yaxis, error, zaxis, color, fpath, *, force = False, layout = dict()):
+def foo(df, xaxis, yaxis, error, zaxis, color, fpath, force = False):
+  cols = [col for col in [xaxis, yaxis, error, zaxis, color] if col is not None]
+  df = df.groupby([xaxis, zaxis, color]).mean().reset_index()
+
   if not force and os.path.isfile(fpath):
     return
 
-  cols = [col for col in [xaxis, yaxis, error, zaxis, color] if col not in [None, False]]
-  _df = df[cols].drop_duplicates()
+  fig = px.scatter(
+    df,
+    x = xaxis,
+    y = yaxis,
+    animation_frame = zaxis,
+    # animation_group = 'op',
+    color = color,
+    error_y = error,
 
-  mean_cols = [col for col in [xaxis, zaxis, color] if col not in [None, False]]
-  df = _df.groupby(mean_cols).mean().reset_index()
-  if error is False:
-    error = None
-  elif error is None:
-    error = 'yaxis_std'
-    df[error] = _df.groupby(mean_cols).std().reset_index()[yaxis]
+    log_y = True,
+    range_x = [df[xaxis].min()-1, df[xaxis].max()+1],
+    range_y = [df[yaxis].min(), df[yaxis].max()],
+  )
 
-  return plot.scatter(df, xaxis, yaxis, error, zaxis, color, fpath, layout = layout)
+  fig.write_html(fpath)
 
 if __name__ == '__main__':
   if len(sys.argv) == 1:

@@ -109,7 +109,7 @@ def fullRanges():
 def case1Ranges(): # TODO: Rename
   modes = MODES
   totalThreads, totalThreadsStep = 100, 1
-  actionsRange = range(100, 1000+1, 100)
+  actionsRange = range(10, 100+1, 10)
   repeatRange = range(10)
 
   def iterate():
@@ -126,7 +126,7 @@ def case1Ranges(): # TODO: Rename
 def case2Ranges(): # TODO: Rename
   modes = MODES
   totalThreadsRange = range(1, 150+1, 3)
-  actionsRange = range(100, 1000+1, 100)
+  actionsRange = range(10, 100+1, 10)
   repeatRange = range(10)
 
   def iterate():
@@ -159,7 +159,7 @@ def htmlPath(fbase, name):
 def imgPath(fbase, name):
   fbase = os.path.join(OUTDIR, fbase)
   os.makedirs(fbase, exist_ok = True)
-  return os.path.join(fbase, f'{name}.png')
+  return os.path.join(fbase, f'{name}.pdf')
 
 def dfPath(name):
   return os.path.join(DATADIR, name + '.pkl.bz2')
