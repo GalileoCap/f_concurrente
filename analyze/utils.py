@@ -56,112 +56,121 @@ def dfCsv2Pkl(ipath, opath):
   saveDf(df, opath)
 
 ############################################################
-# S: Ranges ################################################
+# S: Cases #################################################
 
-def joinRanges(*ranges):
+def joinCases(*ranges):
   for r in ranges:
     for x in r:
       yield x
 
-def testRanges():
+def testCases():
   modes = ['free', 'monitor']
   rangeActions = range(1, 5+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 3+1)] * 3
   repeat = range(3)
   return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 2 * 5 * 3**3 * 3)
 
-def smallRanges():
+def ACases(): # TODO: Rename
   modes = MODES
-  rangeActions = range(1, 10+1)
-  rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 10+1)] * 3
-  repeat = range(5)
-  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 3 * 10 * 10**3 * 5)
 
-def mediumRanges():
-  modes = MODES
-  rangeActions = joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000+1, 100))
-  rangeLogIn, rangeLogOut, rangeApiRequest = (
-    joinRanges(range(1, 10), range(10, 100+1, 10)),
-    joinRanges(range(1, 10), range(10, 100+1, 10)),
-    joinRanges(range(1, 10), range(10, 100+1, 10))
-  )
-  repeat = range(10)
-  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (3 * 10) * (2 * 10)**3 * 10)
+  totalThreads = 100
+  threadsRange = range(1, totalThreads+1, 1)
 
-def largeRanges():
-  modes = MODES
-  rangeActions = joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100), range(1000, 10000+1, 1000))
-  rangeLogIn, rangeLogOut, rangeApiRequest = (
-    joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
-    joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
-    joinRanges(range(1, 100, 5), range(100, 1000+1, 100)),
-  )
-  repeat = range(10)
-  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (4 * 10) * (20 + 10)**3 * 10)
-
-def fullRanges():
-  modes = MODES
-  rangeActions = joinRanges(range(1, 10), range(10, 100, 10), range(100, 1000, 100), range(1000, 10000+1, 1000))
-  rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 1000)] * 3
-  repeat = range(10)
-  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 5 * (4 * 10) * 1000**3 * 10)
-
-def case1Ranges(): # TODO: Rename
-  modes = MODES
-  totalThreads, totalThreadsStep = 100, 1
   actionsRange = range(10, 100+1, 10)
   repeatRange = range(10)
 
   def iterate():
-    for mode, thisThreads, actions, r in itt.product(modes, range(1, totalThreads+1, totalThreadsStep), actionsRange, repeatRange):
-      othersThreads = (totalThreads - thisThreads) // 2 
-      thisThreads += (totalThreads - thisThreads) % 2 # +1 to fix rounding errors
+    for mode, thisThreads, actions, r in itt.product(modes, threadsRange, actionsRange, repeatRange):
+      othersThreads = (totalThreads - thisThreads) // 2
+      thisThreads += (totalThreads - thisThreads) % 2 # Fix rounding errors
 
       yield (mode, actions, thisThreads, othersThreads, othersThreads, r) # logIn
       yield (mode, actions, othersThreads, thisThreads, othersThreads, r) # logOut
       yield (mode, actions, othersThreads, othersThreads, thisThreads, r) # apiRequest
 
-  return (iterate(), 3 * len(modes) * (totalThreads / totalThreadsStep) * len(actionsRange) * len(repeatRange))
+  return (iterate(), 3 * len(modes) * len(threadsRange) * len(actionsRange) * len(repeatRange))
 
-def case2Ranges(): # TODO: Rename
+def BCases(): # TODO: Rename
   modes = MODES
-  totalThreadsRange = range(3, 150+1, 3)
+  threadsRange = range(3, 150+1, 3)
+  actionsRange = [300]
+  repeatRange = range(10)
+
+  def iterate():
+    for mode, totalThreads, totalActions, r in itt.product(modes, threadsRange, actionsRange, repeatRange):
+      threads = totalThreads // 3
+      actions = actionsRange // threads
+
+      yield (mode, actions, threads, threads, threads, r)
+
+  return (iterate(), 3 * len(modes) * len(threadsRange) * len(actionsRange) * len(repeatRange))
+
+def CCases(): # TODO: Rename
+  modes = MODES
+  threadsRange = range(3, 150+1, 3)
+  actionsRange = [10]
+  repeatRange = range(10)
+
+  def iterate():
+    for mode, totalThreads, actions, r in itt.product(modes, threadsRange, actionsRange, repeatRange):
+      threads = totalThreads // 3
+
+      yield (mode, actions, threads, threads, threads, r)
+
+  return (iterate(), 3 * len(modes) * len(threadsRange) * len(actionsRange) * len(repeatRange))
+
+def singleCases(): # TODO: Rename
+  modes = MODES
+  threadsRange = range(1, 150+1, 1)
   actionsRange = range(10, 100+1, 10)
   repeatRange = range(10)
 
   def iterate():
-    for mode, totalThreads, actions, r in itt.product(modes, totalThreadsRange, actionsRange, repeatRange):
-      eachThreads = totalThreads // 3
+    for mode, threads, actions, r in itt.product(modes, threadsRange, actionsRange, repeatRange):
+      yield (mode, actions, threads, 0, 0, r) # logIn
+      yield (mode, actions, 0, threads, 0, r) # logOut
+      yield (mode, actions, 0, 0, threads, r) # apiRequest
 
-      yield (mode, actions, eachThreads, eachThreads, eachThreads, r)
+  return (iterate(), 3 * len(modes) * len(threadsRange) * len(actionsRange) * len(repeatRange))
 
-  return (iterate(), len(modes) * len(totalThreadsRange) * len(actionsRange) * len(repeatRange))
-
-def case3Ranges(): # TODO: Rename
+def doubleCases(): # TODO: Rename
   modes = MODES
-  totalThreadsRange = range(3, 300+1, 3)
-  totalActionsRange = [3 * 100]
+  threadsRange = range(2, 150+1, 2)
+  actionsRange = range(10, 100+1, 10)
   repeatRange = range(10)
 
   def iterate():
-    for mode, totalThreads, totalActions, r in itt.product(modes, totalThreadsRange, totalActionsRange, repeatRange):
-      actions = totalActions // totalThreads
-      eachThreads = totalThreads // 3
+    for mode, threads, actions, r in itt.product(modes, threadsRange, actionsRange, repeatRange):
+      threads = threads // 2
+      yield (mode, actions, threads, threads, 0, r) # logIn & logOut
+      yield (mode, actions, threads, 0, threads, r) # logIn & apiRequest
+      yield (mode, actions, 0, threads, threads, r) # logOut & apiRequest
 
-      yield (mode, actions, eachThreads, eachThreads, eachThreads, r)
+  return (iterate(), 3 * len(modes) * len(threadsRange) * len(actionsRange) * len(repeatRange))
 
-  return (iterate(), len(modes) * len(totalThreadsRange) * len(totalActionsRange) * len(repeatRange))
+def tripleCases(): # TODO: Rename
+  modes = MODES
+  threadsRange = range(3, 150+1, 3)
+  actionsRange = range(10, 100+1, 10)
+  repeatRange = range(10)
+
+  def iterate():
+    for mode, threads, actions, r in itt.product(modes, threadsRange, actionsRange, repeatRange):
+      threads = threads // 3
+      yield (mode, actions, threads, threads, threads, r)
+
+  return (iterate(), len(modes) * len(threadsRange) * len(actionsRange) * len(repeatRange))
 
 Ranges = {
-  'case1': case1Ranges(),
-  'case2': case2Ranges(),
-  'case3': case3Ranges(),
+  'test': testCases(),
+  
+  'A': ACases(),
+  'B': BCases(),
+  'C': CCases(),
 
-  'test': testRanges(),
-  'small': smallRanges(),
-  'medium': mediumRanges(),
-  'large': largeRanges(),
-  'full': fullRanges(),
+  'single': singleCases(),
+  'double': doubleCases(),
+  'triple': tripleCases(),
 }
 
 ############################################################

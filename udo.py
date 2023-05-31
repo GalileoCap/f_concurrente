@@ -61,20 +61,16 @@ def TaskRun():
   }
 
 def TaskFullExperiment():
+  cases = ['A', 'B', 'C', 'single', 'double', 'triple']
+
   return {
     'name': 'full',
     'deps': [TaskCompile, TaskTest],
+    'outs': [f'./data/{case}.pkl.bz2' for case in cases] + [f'./out/{case}' for case in cases],
     'skipRun': True,
+    'clean': False,
 
     'capture': 1,
-    'actions': [
-      rangesAction('case1'),
-      rangesAction('case2'),
-      rangesAction('case3'),
-      rangesAction('small'),
-      # copyPrevAction('small', 'medium'), rangesAction('medium'),
-      # copyPrevAction('medium', 'large'), rangesAction('large'),
-      # copyPrevAction('large', 'full'), rangesAction('full'),
-    ],
+    'actions': [rangesAction(case) for case in cases],
   }
 
