@@ -128,14 +128,14 @@ def case3Plots(df, fbase):
   _df = df.copy()
 
   for op in ['logIn', 'logOut', 'apiRequest']:
-    foo(df, 'totalThreads', f'{op}_meanTime', None, None, 'mode', utils.imgPath(fbase, f'totalThreads_{op}MeanTime'), layout = dict(
+    foo(df, 'totalThreads', f'{op}_meanTime', False, None, 'mode', utils.imgPath(fbase, f'totalThreads_{op}MeanTime'), layout = dict(
       # title = 'Tiempo promedio para ejecutar una acción',
       xaxis_title = f'Cantidad de threads en total',
       yaxis_title = f'Tiempo promedio por {op} (ns)',
       legend_title = 'Modo de sincronización',
     ))
 
-  foo(df, 'totalThreads', 'totalTime', None, None, 'mode', utils.imgPath(fbase, f'totalThreads_totalTime'), layout = dict(
+  foo(df, 'totalThreads', 'totalTime', False, None, 'mode', utils.imgPath(fbase, f'totalThreads_totalTime'), layout = dict(
     # title = 'Tiempo promedio para ejecutar una acción',
     xaxis_title = f'Cantidad de threads en total',
     yaxis_title = f'Tiempo promedio en total (ns)',
