@@ -95,30 +95,6 @@ public class MapLazy<T> implements Map<T> {
     }
   }
 
-  public T findAfter(int key) {
-    while (true) {
-      Node<T> prev = head,
-              curr = prev.next;
-      while (curr.key <= key) {
-        prev = curr;
-        curr = curr.next;
-      }
-
-      prev.lock(); curr.lock();
-      try {
-        if (!validate(prev, curr))
-          continue;
-
-        if (curr.key == Integer.MAX_VALUE)
-          return null;
-        return curr.value;
-      } finally {
-        curr.unlock();
-        prev.unlock();
-      }
-    }
-  }
-
   public T find(int key) {
     while (true) {
       Node<T> prev = head,
