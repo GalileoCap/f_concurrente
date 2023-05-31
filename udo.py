@@ -13,10 +13,6 @@ def filesWithExtension(d, extension):
 def rangesAction(ranges):
   return f'PIPENV_PIPFILE=./analyze/Pipfile pipenv run python ./analyze/main.py {ranges}'
 
-def copyPrevAction(prev, curr):
-  opath = f'./data/{curr}.pkl.bz2'
-  return f'[ ! -f {opath} ] && cp ./data/{prev}.pkl.bz2 {opath} || :'
-
 ############################################################
 # S: Config ################################################
 
@@ -61,20 +57,15 @@ def TaskRun():
   }
 
 def TaskFullExperiment():
+  cases = ['case1', 'case2', 'case3', 'small'] # , 'medium', 'large', 'full']
   return {
     'name': 'full',
     'deps': [TaskCompile, TaskTest],
+    'outs': [f'./data/{case}.pkl.bz2' for case in cases],
     'skipRun': True,
+    'clean': False,
 
     'capture': 1,
-    'actions': [
-      rangesAction('case1'),
-      rangesAction('case2'),
-      rangesAction('small'),
-      rangesAction('case3'),
-      # copyPrevAction('small', 'medium'), rangesAction('medium'),
-      # copyPrevAction('medium', 'large'), rangesAction('large'),
-      # copyPrevAction('large', 'full'), rangesAction('full'),
-    ],
+    'actions': [rangesAction(case) for case in cases],
   }
 
