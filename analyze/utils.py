@@ -67,7 +67,7 @@ def testRanges():
   rangeActions = range(1, 5+1)
   rangeLogIn, rangeLogOut, rangeApiRequest = [range(1, 3+1)] * 3
   repeat = range(3)
-  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 2 * 5 * 3**3 * 3)
+  return (itt.product(modes, rangeActions, rangeLogIn, rangeLogOut, rangeApiRequest, repeat), 3 * 5 * 3**3 * 3)
 
 def smallRanges():
   modes = MODES

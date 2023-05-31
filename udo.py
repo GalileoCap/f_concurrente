@@ -93,7 +93,7 @@ def TaskEntrega():
     'capture': 1,
     'actions': [
       f'mkdir -p {subdir}',
-      f'cp -r ./README.md ./analyze ./consigna.pdf ./src ./udo.py informe.pdf {subdir}',
+      f'cp -r ./README.md ./analyze ./consigna.pdf ./src ./udo.py informe.pdf ./data {subdir}',
       f'rm -r {subdir}/analyze/.venv',
       f'zip {file} {subdir} -r9',
       f'rm -r {subdir}',
