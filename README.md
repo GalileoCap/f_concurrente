@@ -1,4 +1,4 @@
-# TP Programación Concurrente
+# TP Programación Concurrente: Listas Sincronizadas
 
 ## Integrantes
 
@@ -6,7 +6,7 @@
 * Leo Mansini, 318/19
 
 ## Ejecución del programa
-Se necesita `java`
+Se necesita `java 17`
 ```bash
 javac -d build $(find ./src -name "*.java")
 java -cp build ThreadPool
