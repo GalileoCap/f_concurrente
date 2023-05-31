@@ -81,3 +81,21 @@ def TaskFullExperiment():
     'actions': [rangesAction(case) for case in cases],
   }
 
+def TaskEntrega():
+  subdir = 'entrega'
+  file = f'{subdir}_Cappella_Mansini.zip'
+
+  return {
+    'name': 'entrega',
+    'outs': [file],
+    'skipRun': True,
+
+    'capture': 1,
+    'actions': [
+      f'mkdir -p {subdir}',
+      f'cp -r ./README.md ./analyze ./consigna.pdf ./src ./udo.py informe.pdf {subdir}',
+      f'rm -r {subdir}/analyze/.venv',
+      f'zip {file} {subdir} -r9',
+      f'rm -r {subdir}',
+    ],
+  }
